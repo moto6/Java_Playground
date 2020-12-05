@@ -1,9 +1,9 @@
 package toy_calender;
-
+import java.util.Scanner;
 public class calender {
 	
 	
-	static String[] yo_kr = {"ÀÏ","¿ù","È­","¼ö","¸ñ","±İ","Åä"};
+	static String[] yo_kr = {"ì¼","ì›”","í™”","ìˆ˜","ëª©","ê¸ˆ","í† "};
 	static String[] yo_en = {"SUN","MON","TUE","WED","TUR","FRI","SAT"};
 	static String LINE = "-----------------------------";
 	
@@ -23,6 +23,15 @@ public class calender {
 			}
 			System.out.print('\n');
 		}
+
+		////////////////////////////////////////////////
+		Scanner sc = new Scanner(System.in);
+		int a = sc.nextInt();
+		int calmonth[] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+		System.out.printf("%dì›”ì€ %dì¼ê¹Œì§€ ìˆìŠµë‹ˆë‹¤", a, calmonth[a]);
+
+		sc.close();
+		
 		
 	}
 }
