@@ -2,7 +2,6 @@ package toy_calender;
 //import java.util.Scanner;
 public class Calender {
 	
-	
 	private static final String[] YO_KR = {"일","월","화","수","목","금","토"};
 	private static final String[] YO = {"SUN","MON","TUE","WED","TUR","FRI","SAT"};
 	private static final String LINE = "  ----------------------------";
@@ -84,7 +83,7 @@ public class Calender {
 				System.out.print("\n ");
 			}
 			
-		
+			System.out.print("\n\n");
 	}
 	
 	public static int getMaxDaysofMonth(int year, int month) {
