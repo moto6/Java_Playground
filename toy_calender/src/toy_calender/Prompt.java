@@ -29,6 +29,8 @@ public class Prompt {
 		
 		
 		mycal.printCalender(year, month);
+		
+		sc.close();
 	}
 	
 	public static void main(String[] args) {
@@ -43,7 +45,7 @@ public class Prompt {
 		//0~6 ; sun~mon
 		
 		
-		final String[] YOIL = {"SUN","MON","TUE","WED","TUR","FRI","SAT"};
+		final String[] YOIL = {"SUN","MON","TUE","WED","THR","FRI","SAT"};
 		for(int i=0 ; i<7 ; i++) {
 			if(YOIL[i].equals(week)) {
 				return i;
