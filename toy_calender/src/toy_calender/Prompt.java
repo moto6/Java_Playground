@@ -39,7 +39,7 @@ public class Prompt {
 		}
 		
 
-		
+		System.out.print("Thankyou Bye!");
 		sc.close();
 	}
 	
