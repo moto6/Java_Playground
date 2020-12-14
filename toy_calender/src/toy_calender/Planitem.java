@@ -10,7 +10,7 @@ public class Planitem {
 	public String detail;
 	
 	
-	public PlanItem(String date, String detail) {
+	public Planitem(String date, String detail) {
 		try {
 			planData = new SimpleDateFormat("yyyy-MM-dd").parse(date); 
 		}
