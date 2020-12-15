@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class PlanItem {
 	
-	public Date planData;
+	public Date planDate;
 	public String detail;
 	public String peoples = "";
 	
@@ -23,15 +23,22 @@ public class PlanItem {
 	
 	
 	public PlanItem(String date, String detail) {
-		this.planData = getDatefromString(date);
+		this.planDate = getDatefromString(date);
 		this.detail = detail;
 	}
 	
 	public Date getDate() {
-		return planData;
+		return planDate;
 	}
 	
 	public void addpeople(String name) {
 		peoples += name + ",";
+	}
+	
+	public String saveString() {
+		//String ret = "";
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+		String sdate = fmt.format(planDate);
+		return (sdate + "," + "\""+detail +"\""+ "\n");
 	}
 }
