@@ -1,4 +1,13 @@
 package toy_calender;
+
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import javax.xml.crypto.Data;
+//import java.util.HashMap;
+import java.util.Date;
+import java.util.Map;
+import toy_calender.*;
+
 //import java.util.Scanner;
 public class Calender {
 	
@@ -7,6 +16,25 @@ public class Calender {
 	private static final String LINE = "  ----------------------------";
 	private static final int[] MAX_DAYS= { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 	private static final int[] LEAP_MAX_DAYS= { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+	
+	private HashMap <Date, PlanItem> planMap;
+	
+	
+	public Calender() {
+		planMap = new HashMap<Date, PlanItem>();
+	}
+	
+	public void registerPlan(String strDate, String plan) {
+		PlanItem p = new PlanItem(strDate, plan);
+		planMap.put(p.getDate(),p);
+		
+	}
+	
+	public PlanItem searchPlan(String strData) {
+		Date date = PlanItem.getDatefromString(strData);
+		//Pk plan = planMap.get(date);	
+		return planMap.get(date);
+	}
 	
 	
 	public static void main(String[] args) {
@@ -41,9 +69,6 @@ public class Calender {
 				System.out.printf("%4s",YO[i]);
 			}
 			System.out.print("\n");
-			
-			
-			
 			System.out.println(LINE);
 			//System.out.println(" 1   2   3   4   5   6   7");
 			//System.out.println(" 8   9  10  11  12  13  14");
@@ -55,8 +80,6 @@ public class Calender {
 			int curday = 1;
 			int endday = getMaxDaysofMonth(year,month);
 			System.out.print("  ");// cursor adjustment
-			
-			
 			//fistst line print of cal
 			System.out.print("       ");
 			
@@ -74,17 +97,16 @@ public class Calender {
 					curday++;
 					if(endday <= curday) {
 						break;
-					}
-					
+					}		
 				}
 				if(endday <= curday) {
 					break;
 				}
 				System.out.print("\n ");
-			}
-			
+			}		
 			System.out.print("\n\n");
 	}
+	
 	
 	public static int getMaxDaysofMonth(int year, int month) {
 		//int calmonth[] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
@@ -138,8 +160,6 @@ public class Calender {
 	
 		return weekday;
 	}
-	
-	
 	
 	
 }

@@ -1,20 +1,30 @@
 package toy_calender;
 import java.util.Scanner;
+import toy_calender.*;
 
 public class Prompt {
 	
 	private final static String PROMPT = "Calender> ";
-	private static Prompt p = new Prompt();
-	public static Scanner sc = new Scanner(System.in);
-	public static Calender mycal = new Calender();
-	private static Schedule sch = new Schedule();
+	
+	//private static Schedule sch = new Schedule();
+	
+
+	public static void main(String[] args) {
+		Prompt p = new Prompt();
+		p.runPrompt();	
+	}
 	
 	
 	public void runPrompt() {
+		Scanner sc = new Scanner(System.in);
+		Calender cl = new Calender();
+		//PlanItem pi = new PlanItem(date, detail)
+		
+		
 		while(true) {
 			String buf;
 			
-			p.print_menu();
+			this.print_menu();
 			//buf = sc.nextLine(); // what's the diff? find next
 			buf = sc.next();
 			
@@ -23,16 +33,21 @@ public class Prompt {
 				break;
 			}
 			else if(buf.equals("1")) {
-				sch.register(sc,mycal);
+				// 일정 등록
+				//cl.(sc,cl);
+				
 			}
 			else if(buf.equals("2")) {
-				sch.search();
+				// 일정 검색
+				//sch.search();
+				
 			}
 			else if(buf.equals("3")) {
-				p.print_cal_3();
+				//달력보기
+				this.print_cal_3(sc,cl);
 			}
 			else if(buf.equals("h")) {
-				p.helper();
+				this.helper();
 			}
 			
 			
@@ -43,10 +58,6 @@ public class Prompt {
 		sc.close();
 	}
 	
-	public static void main(String[] args) {
-		
-		p.runPrompt();	
-	}
 	
 	public void print_menu() {
 		System.out.println("+----------------------+");
@@ -73,7 +84,7 @@ public class Prompt {
 		return -1;
 	}
 	
-	private void print_cal_3() {
+	private void print_cal_3(Scanner sc, Calender cl) {
 
 		int year = 2000;
 		int month = 1;
@@ -92,11 +103,50 @@ public class Prompt {
 		//System.out.print("WekD> ");
 		String sweek = sc.nextLine();
 		weekday = parseDay(sweek);
-				
-		mycal.printCalender(year, month);
+		
+		cl.printCalender(year, month);
 	}
 	
 	public void helper() {
 		System.out.println("명령 (1, 2, 3, h, q)");
+		System.out.println(" === 도움말의 끝 === \n");
 	}
+	
+	
+	public void cmdSearch(Scanner s, Calender c) {
+		System.out.println("[ 일정 검색 ]");
+		System.out.println("날짜를 입력해 주세요 (yyyy-MM-dd).");
+		String date = s.next();
+		PlanItem plan;
+		plan = c.searchPlan(date);
+		//System.out.println(plan);
+		
+		if(plan != null) {
+			
+		}
+		else {
+			
+		}
+		
+			
+	}
+	public void cmdRegister(Scanner s, Calender c) {
+		System.out.println("[ 일정 검색 ]");
+		System.out.println("날짜를 입력해 주세요 (yyyy-MM-dd).");
+		String date = s.next();
+		String text = "", word = "";
+		
+		System.out.println("일정을 입력해 주세요.(끝문자 ;)");
+		//text = s.nextLine();
+		
+		while((word = s.next()).endsWith(";")) {
+			text +=word;
+		}
+		text +=word;
+		word = word.replace(";","");
+		
+		c.registerPlan(date,text);
+			
+	}
+	
 }

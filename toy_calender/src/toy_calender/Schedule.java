@@ -7,7 +7,7 @@ import java.text.ParseException;
 
 public class Schedule {
 	
-	
+	/*
 	public int register(Scanner s, Calendar c) throws ParseException {
 		// System.out.println("register");
 		System.out.println("[새 일정 등록]");
@@ -32,4 +32,5 @@ public class Schedule {
 		System.out.println("search");
 		return 0;
 	}
+	*/
 }
