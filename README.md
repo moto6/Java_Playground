@@ -24,7 +24,7 @@
   - 모든일(작업)을 논리적인 순서에 따라 요리책처럼 정리하는 사고능력이 중요함
 
 # 자바 이론/개념 정리
-   ###  - 5차시(2020-12-19) : 링크
+   ###  - 5차시(2020-12-19) : [링크 /하드 : Java_Study/Mobidic/자바 5차시.md](https://github.com/d-h-k/Java_Study/blob/main/Mobidic/%EC%9E%90%EB%B0%94%205%EC%B0%A8%EC%8B%9C.md)
 
 
 # 토이프로젝트 - 구구단
