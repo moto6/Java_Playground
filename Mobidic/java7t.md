@@ -151,11 +151,55 @@ public class Myjab{
 <br>
 
 ## CLASSPATH 환경변수
+- 먼저 환경변수란 운영체제에게 실행해야할 프로세스의 위치를 알려준다.
+- mac, windows, Linux 모두 원리는 같고, 방법은 다르다
+  - windows, Linux : https://galid1.tistory.com/211
+- Linux Ubuntu 배포판 기준
+  - 먼저 vi 에디터에서 환경변수 파일을 열어준다
+     - 모든 계정에 일괄 적용시
+      ```
+        vi /etc/profile 
+      ```
+     - 지금 로그인중인 사용자만 적용하고 싶다면
+      ```
+        vi ~.bashrc
+      ``` 
+  - 아래 내용 추가
+      ```
+        export JAVA_HOME=/usr/local/java
+        export CLASSPATH=.:$JAVA_HOME/jre/lib/ext:$JAVA_HOME/lib/tools.jar
+        PATH=$PATH:$JAVA_HOME/bin
+      ```
+   - "source /etc/profile" 혹은 "source ~/.bashrc"
+   - 잘 설정되었는지 확인하기 위한 명령어
+        ```
+        echo $JAVA_HOME
+        echo $CLASSPATH
+        echo $PATH
+        java -version 
+        ```
 
 <br>
 <br>
 
 ## -classpath 옵션
+- 컴파일러가 컴파일 하기 위해서 필요로 하는 참조할 클래스 파일들을 찾기 위해서 컴파일시 파일 경로를 지정해주는 방식
+
+<br>
+
+- 사용 : 
+  - javac -classpath PATH(파일 절대 경로)
+  - javac -cp PATH(파일 절대 경로) : classpath의 단축어 cp
+- 예시 :
+  - 예시를 좀 깔끔하게 적고싶은데 자바 코드랑 디렉토리 파일에 따라 너무 많이 변동되므로, 필요할때마다 알아서 만들어 쓰도록 한다
+  - 구글검색시 "javac", "classpath" 라는 키워드를 넣어 검색하면 된다.
+
+<br>
+
+## 정리하자면
+- jvm에서 돌아갈 자바 클래스들(소스코드를 컴파일한 형태)의 위치를 알려줘야 하는데 
+  - 환경변수는 설정파일에다가 미리 약속한대로 적어놓는것이고
+  - -classpath 옵션은 실행할때마다 그때 그때 새로 알려주는 방식임
 
 <br>
 <br>
