@@ -164,6 +164,7 @@ int temp = ([변수1] [연산자] [변수2]) ? 참일떄 : 거짓일때;
 # 연산자 instanceof 
 - 자바야 이거 형변환 가능한거임? 물어보는 연산자
 - 특히 객체의 형 변환시 자주 사용됨
+- 너무 당연하게도 프리미티브 타입 변수에는 해당 연산자를 사용할 수 없다(java Object 를 상속받지 않았으므로)
 - 예시
   - A instanceof B : B라는 객체가 A와 같은 타입인지 확인하는 부분
   - 부모 instanceof 자식 : 자식 클래스에 부모가 접근 가능하면 T를 반환
@@ -177,6 +178,26 @@ public static void main(String[] args) {
 }
 ```
 
+### instanceof 예제
+```java
+Sytem.out.printf(null instanceof Object);
+//false 출력됨
+
+Object obj = new int[] {1,2,3};
+System.out.println(obj instanceof int[]);
+//true 출력
+
+System.out.println(obj instanceof byte[]);
+//false 출력
+
+System.out.println(obj instanceof Object);
+//true 출력
+
+```
+
+
+```
+```
 
 
 <br>
@@ -304,8 +325,10 @@ new Object() {
 
 # (optional) Java 13. switch 연산자
 
-- C언어에서 지원하는 SWITCH 를 쓰는데, 사실 C언어에서 switch 구문을 컴파일해서 어셈블리로 까보면 다중 if-else문으로 구현되어 있어서 가독성 빼고 성능상의 장점은 없지만, 자바는 다르다고 함
-- 최적화에 좋은 문법이라는데 예제코드를 돌려보며 바이트코드를 확인해 보면
+- C언어 계열 언어들이 그렇듯이 Switch-case 구문을 쓰는데, 사실 C언어에서 switch 구문을 컴파일해서 어셈블리로 까보면 다중 if-else문으로 구현되어 있어서 가독성 빼고 성능상의 장점은 없었다.
+- 자바 13버전 이상에서의 switch연산자는 이전의 switch-case 문과 확실히 다른데,
+- 최적화에 좋은 문법임
+- 예제코드를 돌려보며 바이트코드를 확인해 보면서 진짜 그런지 확인 ㄱ ㄱ
 
 ### 먼저 스위치 키워드를 사용했을때
 ```java
