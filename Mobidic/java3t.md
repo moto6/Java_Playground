@@ -135,6 +135,25 @@
 ||||||
 ||||||
 
+### 삼항연산자 예제코드
+```java
+public static void main(String[] args) {
+  int a = 7;
+  int b = 9;
+
+  int c = (a < b ) ? a : b;
+  int d = (a < b ) ? 0 : 1;
+}
+```
+- 위 예제코드에서 각각
+  - c = 9
+  - d = 1
+- 이 들어가는데 그 이유는 아래와 같은 구조이기 때문
+```java
+int temp = ([변수1] [연산자] [변수2]) ? 참일떄 : 거짓일때;
+```
+- 참고로 if-else 문으로 비숫하게 구현할 수 있으나 바이트코드상 차이는 거의 없다
+- 대신, 코드 가독성이나, 한두줄정도는 라인수를 줄일 수 있는 숏코딩이 가능하다!
 
 
 <br>
@@ -143,19 +162,37 @@
 
 
 # 연산자 instanceof 
-- 자바야 이거 형변환 가능한거임?
+- 자바야 이거 형변환 가능한거임? 물어보는 연산자
 - 특히 객체의 형 변환시 자주 사용됨
 - 예시
-  - A instanceof B : B의 객체가 A인가요?
+  - A instanceof B : B라는 객체가 A와 같은 타입인지 확인하는 부분
   - 부모 instanceof 자식 : 자식 클래스에 부모가 접근 가능하면 T를 반환
   - 참조변수 instanceof 타입(클래스)
->나중에 추가적으로 조사할 필요가 있다 2020-12-31
+
+- 인스턴스오브 예제코드
+```JAVA
+public static void main(String[] args) {
+  String s = "hello";
+  boolean check = s instanceof java.lang.String;
+}
+```
+
+
 
 <br>
 <br>
 <br> 
 
 # assignment(=) operator
+
+
+```java
+public static void main(String[] args) {
+  int a = 2;
+  a += a;
+
+}
+```
 
 
 <br>
@@ -177,11 +214,37 @@
   ```java
   (x, y) -> x < y ? x : y;
   ```
+### 화살표 연산자 예제코드
+- 출처 : 오라클 람다 ->> https://www.oracle.com/technical-resources/articles/java/architect-lambdas-part1.html
+
+```java
+public class Lambdas {
+  public static void main(String[] args) {
+    Runnable myR = new Runnable();
+    public void run() {
+      System.out.println("Hello world!!");
+    }
+  };
+  r.run();
+}
+```
+
+```java
+public static void main(String[] args) {
+  Runnable r = () -> System.out.println("Hello world!!");
+  r.run();
+}
+```
+- 위의 두 예제코드는 완전히 동일하게 동작하는데
+- 참고로, 바이트코드를 뜯어보면 invoke special 이라는 기능으로 이루어져 있다.
+### 모르지만 넘어가는 부분
+- invoke special
+- invoke dynamic
+
 - 이 람다 표현식을 사용하는 이유는
   - 코드를 간결하고 직관적이게
   - 코드 가독성 up!
 - 제한사항으로는 Java 1.8 버전 이상부터 
-
 - 익명 클래스 기법이라고 호칭할수 있는데,
   - 단 하나의 객체만을 생성할 수 있는 클래스를 
   - 자바에서는 클래스의 선언과 동시에 객체를 생성
@@ -206,7 +269,9 @@ new Object() {
 }
 ```
 
-> 아직은 람다의 필요성을 모르겠다 나중에 더 정리해야겠다
+- 해당 기능 쓰고싶으면 Functional Interface 를 사용
+
+> 아직은 람다를 정확히 이해하고 쓸수는 없다. 나중에 더 정리할 예정
 
 <br>
 <br>
@@ -239,8 +304,87 @@ new Object() {
 
 # (optional) Java 13. switch 연산자
 
-- 후.. 힘드러요 Pass
+- C언어에서 지원하는 SWITCH 를 쓰는데, 사실 C언어에서 switch 구문을 컴파일해서 어셈블리로 까보면 다중 if-else문으로 구현되어 있어서 가독성 빼고 성능상의 장점은 없지만, 자바는 다르다고 함
+- 최적화에 좋은 문법이라는데 예제코드를 돌려보며 바이트코드를 확인해 보면
 
+### 먼저 스위치 키워드를 사용했을때
+```java
+public static void main(String[] args) {
+  int a = 5;
+  switch (a) {
+    case 1:
+      a = 4;
+      break;
+    case 5:
+      a = 3;
+      break;
+    default:
+      a = 7;
+  }
+}
+```
+- 바이트코드
+  - 출처 : https://whereishq.blogspot.com/2020/11/3.html
+```
+stack=1, locals=2, args_size=1
+ 0: iconst_5
+ 1: istore_1
+ 2: iload_1
+ 3: lookupswitch  { // 2
+     1: 28
+     5: 33
+     default: 38
+ }
+28: iconst_4
+29: istore_1
+30: goto          41
+33: iconst_3
+34: istore_1
+35: goto          41
+38: bipush        7
+40: istore_1
+41: return
+```
+- lookupswitch는 키를 사용하여 테이블에서 대상 주소를 조회하고 해당 주소의 명령어에서 계속 실행하는 방식으로 동작한다.
+
+### 두번째로, if-elseif-else 문법을 사용할때
+```java
+public static void main(String[] args) {
+  int a = 5;
+  if (a == 4) {
+    a = 4;
+  } else if (a == 5) {
+    a = 3;
+  } else {
+    a = 7;
+  }
+}
+```
+
+```
+stack=2, locals=2, args_size=1
+ 0: iconst_5
+ 1: istore_1
+ 2: iload_1
+ 3: iconst_4
+ 4: if_icmpne     12
+ 7: iconst_4
+ 8: istore_1
+ 9: goto          25
+12: iload_1
+13: iconst_5
+14: if_icmpne     22
+17: iconst_3
+18: istore_1
+19: goto          25
+22: bipush        7
+24: istore_1
+25: return
+```
+
+- 동일한 기능을 하는 스위치문, 그리고 이프문 두가지 방식을 바이트코드로 분석한 결과
+  - if 방식에서 stack 공간을 하나 더 사용함
+  - 실행해야 할 명령이 많아졌다(성능이 조금 더 구림)
 
 
 <br>
