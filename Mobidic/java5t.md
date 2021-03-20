@@ -26,7 +26,7 @@
 ## 클래스를 정의하는 방법
 
 ```java
-class gogi { // gogi 라는 클래스 속에는
+class gogi { // gogi 라는 클래스 속
 	
 	static int cow;	// static 키워드를 사용한 클래스 변수
 	static final int fork; 	// final 키워드를 사용한 상수
@@ -34,6 +34,9 @@ class gogi { // gogi 라는 클래스 속에는
 	int chicken; // 인스턴스 변수
 	String default_grade = "prime"; 
 	private int falver; // private 키워드로 외부 접근을 제한하는 인스턴스 변수
+
+	
+    int cooking_time;
 
 	// 생성자(Constructor)
 	public gogi (){
@@ -59,39 +62,73 @@ class gogi { // gogi 라는 클래스 속에는
 
 	// private 매서드
 	private int add_butter(int how_many) {
-			falver += how_many
-			return 0;
+		falver += how_many
+		return 0;
 	}
+
+	private int pan_Frying(int how_long) {
+
+	}
+
 
 }
 ```
 
 - 위 코드처럼 앞으로 생성할 객체가 사용할수 있는 메서드, 변수 등을 담고있는
-- 일종의 구조체의 확장버전이 바로 클래스 입니다.
+- 일종의 구조체의 확장버전(메서드 포함)이 바로 클래스 입니다.
+- 이 코드의 마지막 메서드 두 개는 객체지향적이라고 볼 수 있는데 () 외부에서 setter로 속도를 조절하는 것이 아니라, 객체가 직접 자신의 속성을 의미있게 변경하도록 했기 때문입니다.
 
-### 키워드 정리
 
-- 접근제한별 구분
-    - private : 클래스 외부에서 접근이 불가능
-    - public : 가능!
-- 키워드
-    - static : 시작과 동시에 생성! → 대표적으로 main함수가 static이 강제된다
-    - this :
-    ### final
-	- final : 한번 선언하면 더이상 변경할수 없다! "변경자/"
-        - class에서의 final : 상속할 수 없는 클래스 (성직자가 되신 부모님)
-		### 클래스에 final 키워드를 사용해 상속을 막는 경우
-		  - 
-		  - 예시 : java의 String Class 의 경우, final 키워드가 선언되어 상속이 불가능한데, 자바 언어의 규칙대로 문자열 코드가 동작하도록, String 클래스의 동작이 변하지 않는것(상속 및 오버로딩에 의한 변경)을 보장하기 위해 
+# 키워드 정리
 
-        - method에서 final : 하위 클래스의 오버라이딩이 불가능함 (수정이 불가능한 유언장)
-        - field에서의 final : const키워드와 유사, 변경할수 없는 키워드를 만들어준다 (못난 아들이 물려받을수 있는 돈은 정해져있다)
-            - field란 :
-    - void : return 되는 값이 없다
-    - 이외에도 default, abstract, transient, synchronized, volatile, super 키워드 등이 있지만 패쓰!
-    - 
 
-### 변수 종류(선언 위치별 정리
+###  접근제한자
+  - private : 클래스 외부에서 접근이 불가능
+  - public : 가능!
+  - (없음) : 디폴트 : 같은 패키지 내부에서 접근 가능
+
+<br>
+
+### 클래스의 영역에서
+  - 필드
+  - 생성자
+  - 메서드
+
+<br>
+
+### 이외	
+  - static : 시작과 동시에 생성! → 대표적으로 main함수가 static이 강제된다
+  - this : 생성된 인스턴스의 클래스변수
+
+<br>
+
+### final 키워드
+- final : 한번 선언하면 더이상 변경할수 없다! "변경불가능함을 표시"
+  - class에서의 final 키워드 사용 : 상속할 수 없는 클래스 
+  - 자바 String class 가 Final
+- 클래스에 final 키워드를 사용해 상속을 막는 경우
+  - 예시 : java의 String Class 의 경우, final 키워드가 선언되어 상속이 불가능한데, 자바 언어의 규칙대로 문자열 코드가 동작하도록, String 클래스의 동작이 변하지 않는것(상속 및 오버로딩에 의한 변경)을 보장하기 위해 
+- method에서 final : 하위 클래스의 오버라이딩이 불가능함 (수정이 불가능한 유언장)
+- field에서의 final : const키워드와 유사, 변경할수 없는 키워드를 만들어준다 (못난 아들이 물려받을수 있는 돈은 정해져있다)
+### 이외
+  - void : return 되는 값이 없다
+  - default : 참고한부분 [링크](https://siyoon210.tistory.com/95)
+    - 인터페이스 내부에 구현 로직이 포함될 수 없었는데
+    - 메소드 선언 시에 default를 명시하게 되면 인터페이스 내부에서도 로직이 포함된 메소드 사용 가능
+  - abstract
+  - transient
+  - synchronized
+  - volatile
+  - super : 부모 클래스로부터 상속받은 필드나 메소드를 자식 클래스에서 참조하는 데 사용하는 참조 변수입니다.
+    - 메서드 상속받아 오버라이드 하는데 주로 사용
+ 
+
+인스턴스 변수의 이름과 지역 변수의 이름이 같을 경우 인스턴스 변수 앞에 this 키워드를 사용하여 구분할 수 있었습니다.
+
+이와 마찬가지로 부모 클래스의 멤버와 자식 클래스의 멤버 이름이 같을 경우 super 키워드를 사용하여 구별할 수 있습니다.
+
+
+# 변수 종류(선언 위치별 정리)
 
 - 3가지가 있는데 : 인스턴스 / 클래스 / 지역변수  이렇게 세가지가 존재한다.
 
