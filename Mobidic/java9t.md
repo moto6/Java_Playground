@@ -9,47 +9,24 @@ RuntimeException과 RE가 아닌 것의 차이는?
 ```
 
 # 1) 자바에서 예외 처리 방법 (try, catch, throw, throws, finally)
+
+### try-catch 문
 - 설명을 위한 예제코드
 ```java
-import java.io.*;
-import java.util.List;
-import java.util.ArrayList;
-
-public class ListOfNumbers {
-
-    private List<Integer> list;
-    private static final int SIZE = 100;
-
-    public ListOfNumbers () {
-        list = new ArrayList<Integer>(SIZE);
-        for (int i = 0; i < SIZE; i++) {
-            list.add(i);
-        }
-    }
-
-    public void writeList() throws Exception{
-	// The FileWriter constructor throws IOException, which must be caught.
-    
-        PrintWriter fileHandler = new PrintWriter(new FileWriter("output.txt"));
-    
-        for (int i = 0; i < SIZE; i++) {
-            // The get(int) method throws IndexOutOfBoundsException, which must be caught.
-            fileHandler.println("Value at: " + i + " = " + list.get(i));
-        }
-        fileHandler.close();
-    }
-
-    public static void main(String[] args) throws Exception{
-        ListOfNumbers lom = new ListOfNumbers();
-        lom.writeList();
-    }
+try {
+    // 예외가 발생할 가능성이 있는 코드
+} catch (Exception1 e1) {
+    // Exception1이 발생했을 때, 이를 처리하기 위한 코드
+} catch (Exception2 e2) {
+    // Exception2가 발생했을 때, 이를 처리하기 위한 코드
+} catch (ExceptionN eN) {
+    // ExceptionN이 발생했을 때, 이를 처리하기 위한 코드
 }
 ```
-- PrintWriter out = new PrintWriter(new FileWriter("OutFile.txt"));
+- try블럭에는 여러개의 catch 블록이 올 수 있다
+- 이 중에서 발생한 예외의 종류와 일치하는 단 한개의 블록만 수행됩니다
 
-이 부분에서 OutFile.txt 파일을 성공적으로 열지 못한다면 IOException이 발생할 것입니다.
 
-그리고 두번째 부분은 ArrayList에서 get Method를 통해 값을 가지고 오려고 할 때 해당 인덱스 값이 없다면 IndexOutOfBoundsException이 발생할 수 있습니다.
 
 
 # 2) 자바가 제공하는 예외 계층 구조
