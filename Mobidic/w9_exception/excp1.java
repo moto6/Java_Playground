@@ -22,7 +22,10 @@ public class excp1 {
     static void run2() {
         try {
             throw new Exception("익명클래스로 만든거임");
-        }catch(Exception e) {
+        }catch(NullPointerException e) {
+            System.out.println("에러메시지 : "+ e.getMessage());
+            e.printStackTrace();
+        }catch(ClassCastException e) {
             System.out.println("에러메시지 : "+ e.getMessage());
             e.printStackTrace();
         }
