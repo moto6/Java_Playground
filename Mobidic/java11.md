@@ -104,44 +104,6 @@ public class ExEnum {
     }
 }
 ```
-
-- TMI : 열거형과 타입정의 (다른언어들과의 타입 비교)
-    - C/C++에서 제공하던 enum과 다른점이 있다
-        : 자바의 enum에서는 열거형의 값 뿐만 아니라, 타입까지 관리한다. 이를 **엄격한 타입 정의(strogly typed / strictly)**라고 한다 자바는 언어 기본스펙인데 과거의 C/C++은 아니였다
-        : C/C++은 enum이 컴파일타임에 정수값으로 변환된다
-        ```c++
-        enum Color { 
-            COLOR_BLACK, // assigned 0 
-            COLOR_RED, // assigned 1 
-            COLOR_BLUE, // assigned 2 
-            COLOR_GREEN, // assigned 3 
-            COLOR_WHITE, // assigned 4 
-            COLOR_CYAN, // assigned 5 
-            COLOR_YELLOW,// assigned 6 
-            COLOR_MAGENTA// assigned 7 
-        }; 
-        Color paint(COLOR_WHITE); std::cout << paint; // 4
-        ```
-    - Type에 대해서 얼마나 엄격하냐에 따라 두가지로 나뉘는데
-      - strongly typed 
-      - weakly typed (loosely typed)
-    - 또 Type결정 시기에 따라 타입은 두가지로 나뉘는데
-      - 컴파일타임에 변수의 타입이 결정되면 : Statically typed, 정적타입
-          - C/C++ , Java, TS(살짝 다르지만..)
-      - 런타임(코드 실행중)에 타입이 결정되면 : Dayamically typed, 동적타입
-          - Python, JS
-    - 일반적으로 strongly typed 컴파일타임에 변수의 타입이 결정되는 Statically typed 이며, 컴파일타임중에 오류/예외사항을 모조리 검사한다
-      - 이쯤하면 또 돌고돌아 Pointer 이야기를 하고싶은데 나중에.. ㅠㅠ 나도잘 몰라 무서워
-      - 또 c언어에 가면 union(공용체) 같은것도 있는데 단순하게 "C언어로 파이썬같은거 만들때 쓰는 문법" 이고, 깊게 들어가면 맥락이랑 안맞으므로 생략한다.
-    - 그리고 아무리 Statically typed, 정적타입이라도, 컴파일타임에 결정할 수 없는 경우가 종종 있는데, 대표적으로 "타입 변환" 동작코드에서는 런타임에 변수의 타입이 결정된다.
-        - 그래서 결국 Statically typed 언어를 사용할지라도 일정부분은 불가피하게 Dayamically typed하는 부분이 발생할수 있고, **이 부분에서 논리적 에러가 발생할 가능성이 존재한다!**
-        - 프로그래밍 언어차원에서 타입 언제 어느시점에서나 모든 타입오류를 발견해 낼 수 있는 경우를, "엄격한 타입 정의 언어(strogly typed Lang)" 이라고 부르며 Java가 대표적이다.
-    - 반대의 경우 
-        - cpp에서는 enum type과 실제 정수값을 동일시하고, 공용체(union)등의 요소는 type과 bit단위의 해석을 오로지 프로그래머에게 전적으로 위임하는 방식이기에 에러의 발생 가능성이 높다.
-        - 심지어 동적할당을 위해 쓰이는 malloc함수는 (void *) 같은걸 리턴해준다.....
-
----
-
 # 코쿼 Enum 수업
 - Enum 이란 : 불연속적이고, 갯수에 제한이 있는 값들을 열거한 type → 열거형
 ###  Type-Safe
@@ -217,7 +179,43 @@ public class ExEnum {
     - Enum 을 내부에서만 쓰는 경우 클래스에 종속적인 경우에 내부에 선언하는게 좋다.
 
 ---
+# 타입에 대해서
+- TMI : 열거형과 타입정의 (다른언어들과의 타입 비교)
+    - C/C++에서 제공하던 enum과 다른점이 있다
+        : 자바의 enum에서는 열거형의 값 뿐만 아니라, 타입까지 관리한다. 이를 **엄격한 타입 정의(strogly typed / strictly)**라고 한다 자바는 언어 기본스펙인데 과거의 C/C++은 아니였다
+        : C/C++은 enum이 컴파일타임에 정수값으로 변환된다
+        ```c++
+        enum Color { 
+            COLOR_BLACK, // assigned 0 
+            COLOR_RED, // assigned 1 
+            COLOR_BLUE, // assigned 2 
+            COLOR_GREEN, // assigned 3 
+            COLOR_WHITE, // assigned 4 
+            COLOR_CYAN, // assigned 5 
+            COLOR_YELLOW,// assigned 6 
+            COLOR_MAGENTA// assigned 7 
+        }; 
+        Color paint(COLOR_WHITE); std::cout << paint; // 4
+        ```
+    - Type에 대해서 얼마나 엄격하냐에 따라 두가지로 나뉘는데
+      - strongly typed 
+      - weakly typed (loosely typed)
+    - 또 Type결정 시기에 따라 타입은 두가지로 나뉘는데
+      - 컴파일타임에 변수의 타입이 결정되면 : Statically typed, 정적타입
+          - C/C++ , Java, TS(살짝 다르지만..)
+      - 런타임(코드 실행중)에 타입이 결정되면 : Dayamically typed, 동적타입
+          - Python, JS
+    - 일반적으로 strongly typed 컴파일타임에 변수의 타입이 결정되는 Statically typed 이며, 컴파일타임중에 오류/예외사항을 모조리 검사한다
+      - 이쯤하면 또 돌고돌아 Pointer 이야기를 하고싶은데 나중에.. ㅠㅠ 나도잘 몰라 무서워
+      - 또 c언어에 가면 union(공용체) 같은것도 있는데 단순하게 "C언어로 파이썬같은거 만들때 쓰는 문법" 이고, 깊게 들어가면 맥락이랑 안맞으므로 생략한다.
+    - 그리고 아무리 Statically typed, 정적타입이라도, 컴파일타임에 결정할 수 없는 경우가 종종 있는데, 대표적으로 "타입 변환" 동작코드에서는 런타임에 변수의 타입이 결정된다.
+        - 그래서 결국 Statically typed 언어를 사용할지라도 일정부분은 불가피하게 Dayamically typed하는 부분이 발생할수 있고, **이 부분에서 논리적 에러가 발생할 가능성이 존재한다!**
+        - 프로그래밍 언어차원에서 타입 언제 어느시점에서나 모든 타입오류를 발견해 낼 수 있는 경우를, "엄격한 타입 정의 언어(strogly typed Lang)" 이라고 부르며 Java가 대표적이다.
+    - 반대의 경우 
+        - cpp에서는 enum type과 실제 정수값을 동일시하고, 공용체(union)등의 요소는 type과 bit단위의 해석을 오로지 프로그래머에게 전적으로 위임하는 방식이기에 에러의 발생 가능성이 높다.
+        - 심지어 동적할당을 위해 쓰이는 malloc함수는 (void *) 같은걸 리턴해준다.....
 
+---
 # Java Enum의 특징
 - enum에 정의된 상수들은 해당 enum type의 객체
 - C 등의 다른 언어에도 열거형이 존재한다. 하지만 다른 언어들과 달리 Java의 enum은 단순한 정수 값이 아닌 해당 enum type의 객체
