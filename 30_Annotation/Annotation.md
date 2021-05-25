@@ -45,3 +45,4 @@ public @                 interface MyAnnotation {
 
 # 정리해라
 - https://parkadd.tistory.com/54
+- https://www.notion.so/37d183f38389426d9700453f00253532
