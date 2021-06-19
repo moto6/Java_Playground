@@ -1,5 +1,4 @@
 package Chp25_Generic.ex2;
 
-public class Car {
-
+public class H_Car {
 }
