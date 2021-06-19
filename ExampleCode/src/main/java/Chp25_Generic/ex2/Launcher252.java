@@ -1,6 +1,6 @@
 package Chp25_Generic.ex2;
 
-public class Launcher {
+public class Launcher252 {
     public static void main(String[] args) {
         Product<K_Car, String> product1 = new Product<>();
         //Product<K_Car, String> product1 = new Product<K_Car, String>();
