@@ -469,6 +469,9 @@ public @interface NonNull {
 @Target(ElementType.TYPE)
 public @interface FuntionalInterface {}
 ```
+- 자바독은 나중에 필요할때 더 공부
+  - JavaDoc만들기 링크 : http://www.devkuma.com/books/pages/1232
+  - inteliJ에서 JavaDoc만들기 : https://log-laboratory.tistory.com/306
 
 ## 4) **`@Inherited`**
 
@@ -531,21 +534,6 @@ public class Object {
 <br>
 
 --------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## 어노테이션 프로세서
 - 런타임시에 리플랙션을 사용하는 어노테이션과 달리
