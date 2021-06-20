@@ -8,6 +8,13 @@
     - **[@documented]()**
   - 애노테이션 프로세서
 
+--------
+<br>
+<br>
+<br>
+
+--------
+
 
 ## 어노테이션이란?
 - 추가적인 정보를 제공해주는 메타 데이터
@@ -36,28 +43,11 @@
 - 어노테이션이 주석이고 정보를 제공한다고 했는데, 제공할수 있는 정보들은 **무.적.권**
   - 컴파일러 수준에서 해석이 되는것
   - 완전히 정적인 것들
-  - 동적으로 런타임중에 바뀌어야 하는 것들은 애노테이션에 사용할 수 없다
-- 면접질문이였는데...
-```java
-@RestController
-public HelloController{
-	
-	private static final String hello = "hello";
-
-	@GetMapping(hello)
-	public String hello(){
-		return "hello";
-	}
-	
-}
-```
-- 위와 같이 hello 변수는 *static final* 한 정적 변수임으로 GetMapping 애노테이션에 사용할 수 있다.
-- **but.** hello가 동적인 변수라면? (final이 없음)
-```java
-private String hello = "hello"; → @GetMapping(hello)*
-```
-- 컴파일 에러 발생
-- 지금까지 어노테이션을 붙였던걸 다 생각해보면 정적인 요소들(클래스, 메서드, 필드변수의 프로토타입 등등..)에만 붙였다는걸 반추합시다!
+  - 동적으로 런타임중에 바뀌어야 하는 것들은 애노테이션에 사용할 수 없다 : 면접질문이였는데...
+- 정적인 변수 **`static final`** 키워드 사용시 변수에 애노테이션에 사용가능
+- **but.** 동적인 변수라면? (final이 없음)
+  - 컴파일 에러 발생
+  - 지금까지 어노테이션을 붙였던걸 다 생각해보면 정적인 요소들(클래스, 메서드, 필드변수의 프로토타입 등등..)에만 붙였다는걸 반추합시다!
 
 ### 어노테이션의 민낮 : 바이트코드에선 어떨까?
 - 먼저 자바파일
@@ -77,11 +67,19 @@ public interface com.dong.annotation.MyAnnotation extends java.lang.annotation.A
 - 컴파일 완료된 바이트코드를 살펴보면 java.lang.annotation.Annotation 이 extends 되어 있다
 - 스터디를 진행하면서 어떤 의미인지 공부해봐요 :D
 
-## 어노테이션 편가르기
+--------
+<br>
+<br>
+<br>
+
+--------
+
+## 어노테이션의 분류기준/다양한 종류들
 - 어노테이션을 좀 분할정복 해보면
-- 두가지 관점으로 분류해볼수 있는데
-  - 먼저 어노테이션을 누가 제공해주는지에 따라서
-  - 다음으로 사용 목적과 용도에 따른
+- **`2가지`** 관점으로 분류해볼수 있는데
+  - 제공자 : 어노테이션을 누가 제공해주는지에 따라서 분류
+  - 사용 목적 : 용도(목적)에 따라서 분류
+- 다양한 분류기준이 있으니까 아 그렇구나~ 하면 된다!
 
 ### 어노테이션 제공자에 따른 분류
 - 어노테이션 제공자에 따라서는종류가 있다
@@ -94,6 +92,8 @@ public interface com.dong.annotation.MyAnnotation extends java.lang.annotation.A
   1. Maker 어노테이션 : 멤버 변수가 없고 컴파일러에게 의미를 전달하기 위한 표식으로 사용되는 어노테이션 (ex. @Override )
   2. Single-value 어노테이션 : 멤버로 단일변수를 갖고 데이터를 전달할 수 있는 어노테이션
   3. Full 어노테이션 : 둘 이상의 변수를 갖는 어노테이션으로 데이터를 키 = 값형태로 전달한다.
+
+--------
 
 ## JDK가 기본으로 제공하는 어노테이션
 - - Java/JDK 에 내장되어 기본 제공해주는 어노테이션은 또 두가지 종류가 있다.........
@@ -113,11 +113,13 @@ public interface com.dong.annotation.MyAnnotation extends java.lang.annotation.A
 |@SafeVarargs| 제네릭스 타입의 가변인자에 사용한다, 가변인자 매개변수 사용시 경고를 무시 (JDK 1.7이상 사용가능)
 |@FunctionalInterface| 함수형 인터페이스라는 것을 알린다. (JDK 1.8) 
 |@Native native| 네이티브 메서드에서 참조되는 상수 앞에 붙인다. (JDK 1.8) 
-
+- `@SuppressWarnings` : 컴파일러가 보여주는 경고 메시지를 억제
+  - unchecked : 지네릭스로 타입을 지정하지 않았을 때 발생
+  - rawtypes : 지네릭스를 사용하지 않을 때 발생
+  - varargs : 가변인자 타입이 지네릭 타입일 때 발생
 - 질문의 추억  
   - 제네릭 : 사용할 클래스,메서드 내부에서의 데이터타입을 외부에서 지정하는 기법
   - 함수형 인터페이스 : 1개의 추상 메서드만을 갖고 있는 인터페이스, 자바에서 람다식을 구현하기 위해 사용
-
 
 ### 2)Meta Annotataion
 
@@ -137,7 +139,6 @@ public interface com.dong.annotation.MyAnnotation extends java.lang.annotation.A
 |@Repeatable(*)| 어노테이션을 반복해서 사용(선언..?)할 수 있게 한다. (JDK 1.8)
 - Retention, Target 어노테이션 설명은 길어져서 아래로 따로 뺌
 
-
 ### 3)이외.. JDK가 기본으로 제공해주지 않는 어노테이션
 
 - 위에서 설명한거 빼고 전부다!
@@ -145,25 +146,25 @@ public interface com.dong.annotation.MyAnnotation extends java.lang.annotation.A
 - Rombok 제공 
 - 우리들이 만들어낸 어노테이션 (웹서버 과제 로치..?)
 
+--------
+<br>
+<br>
+<br>
+
+--------
+
 ## 어노테이션의 용도
 - 어노테이션은 크게 4가지 용도/목적이 있는데
   - 1)문서화
+    - JavaDoc
   - 2)컴파일러 체크
+    - 코드 작성 문법 에러를 체크하도록 정보 제공
+    - @Override : 부모클래스에 메서드를 오버라이드 한다는걸 알려줌
+    - @Deprecated : 앞으로 지원안되는거니까 사용하지 말아줘(경고)
   - 3)코드 분석(+자동생성)
+    - Lombok 이 대표적으로 어노테이션을 이용해서 코드를 분석하고/자동으로 생성해준다
   - 4)런타임 프로세싱
-
-- 1)컴파일러 체크
-  - 코드 작성 문법 에러를 체크하도록 정보 제공
-  - 예시
-    - @override : 부모클래스에 메서드를 오버라이드 한다는걸 알려줌
-    - 
-- 개발툴이
-  - 예시
-    - Jar로 컴파일하는지, War로 컴파일하는지 
-- 특정 기능이나 역할을 수행하도록 정보를 제공
-  - 예시
-    - @Service / @Controller / @SpringApplication
-    -
+    - Spring에서 : @Service / @Controller / @SpringApplication
 
 ## 커스텀 어노테이션 사용법
 - 만들게 되면 @interface의 형태로 만들어지고 위의 메타 어노테이션을 붙여 메타 데이터를 표시할 수도 있다.
@@ -224,17 +225,51 @@ private String userId;
 private String userPassword;
 ```
 
-## 사용법 예제코드와 테스트코드
-- 
+## 어노테이션 사용법 예제코드
+- 프로젝트에 있는 예제코드임
+```java
+package Chp30_AnnotationReflection.ex1;
 
-- 결과
-  - 결과물을 보면 매개변수의 값은 이름없음이지만 각 필드에 할당된 어노테이션의 필드 값은 다른 것을 볼 수 있다.
-  - 만일, 어노테이션에 Retention을 RUNTIME으로 하지 않으면 아래와 같이 런타임시에 동작하는 reflection을 이용해서 값을 불러오지 못한다.
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+enum TestType {FIRST, FINAL}
 
+@Retention(RetentionPolicy.RUNTIME)//런타임에만 사용하도록
+@interface TestInfo {
+    int count() default 1;
+    String testBy();
+    String[] testTools() default {"TESTUnit", "JUint5", "PainKiller"};
+    TestType testType() default TestType.FIRST;
+    Date testDate();
+}
 
+@Retention(RetentionPolicy.RUNTIME)
+@interface Date {
+    String yyyymmdd();
+}
 
+@TestInfo(testBy = "Dong", testDate = @Date(yyyymmdd = "20210619"))
+public class Launcher301 {
+    public static void main(String[] args) {
+        Class<Launcher301> lan301class = Launcher301.class;
+        TestInfo annotationTestInfo = lan301class.getAnnotation(TestInfo.class);
 
+        System.out.println("testBy = " + annotationTestInfo.testBy());
+        System.out.println("testDate = " + annotationTestInfo.testDate().yyyymmdd());
 
+        for (String str : annotationTestInfo.testTools()) {
+            System.out.println("testTools = " + str);
+        }
+
+        for (Annotation a : Launcher301.class.getAnnotations()) {
+            System.out.println(a);
+        }
+        System.out.println(annotationTestInfo);
+    }
+}
+
+```
 
 ## 특별한 엘리먼트 : (기본 엘리먼트 / value 엘리먼트)
 - value 라는 특별한 엘리먼트가 있는데, 사용법을 알아보면
@@ -255,10 +290,14 @@ public @Interface AnnotationName{
 @AnnotataionName(value="값", count=7);
 ```
 
-## 어노테이션의 적용 대상
+--------
+<br>
+<br>
+<br>
 
+--------
 
-## @Type : 적용(동작) 대상 지정
+## 1) **`@Target`** : 어노테이션의 적용 대상을 지정하는 **`메타`** 어노테이션
 
 - 코드상에서 어노테이션을 적용할 수 있는 대상/범위/적용가능한 범위를 지정
 - 어노테이션을 작성할 때 지정해 줘야 함
@@ -355,16 +394,23 @@ public @interface AnnotationName{...}
 ```
 - TYPE, FILED, METHOD 세가지 경우에 어노테이션을 적용 할 수 있다
 
-## @Retention : 어노테이션 유지 정책
+--------
+<br>
+<br>
+<br>
+
+--------
+
+## 2) **`@Retention`** : 어노테이션 유지 정책을 설정하는 **`메타`** 어노테이션
 - 어노테이션의 유통기한을 지정하는건데 : 어노테이션 적용 코드가 유지되는 시점을 지정하는 것 **(Life Time)**
 - java.lang.annotataion.RetentionPolicy 에 열거형 상수로 정의되어 있음
 - RetentionPolicy 소개
 
-|RetentionPolicy 열거형 상수|설명|
-| :-- | :-- |
-|SOURCE|소스코드상에서만 어노테이션에 의미가 있고, 바이트코드상에서는 정보가 없음, 컴파일러에 의해 버려지는 정보|
-|CLASS|바이트 코드 파일까지 어노테이션 정보를 유지, 리플렉션을 이용할수 없다, 클래스파일에는 존재하지만 런타임 시에 유지할 필요 없다는 것을 알리고 이 값이 default이다|
-|RUNTIME| 클래스파일에도 존재하고 런타임애 VM에 의해 유지되어 리플랙션을 통해 클래스 파일의 정보를 읽어 처리 가능하다.
+|RetentionPolicy 열거형 상수|설명|source|complier|JVM|
+| :-- | :-- | :-- | :-- | :-- |
+|SOURCE|소스코드상에서만 어노테이션에 의미가 있고, 바이트코드상에서는 정보가 없음, 컴파일러에 의해 버려지는 정보|O|X|X|
+|CLASS|바이트 코드 파일까지 어노테이션 정보를 유지, 리플렉션을 이용할수 없다, 클래스파일에는 존재하지만 런타임 시에 유지할 필요 없다는 것을 알리고 이 값이 default이다|O|O|X|
+|RUNTIME| 클래스파일에도 존재하고 런타임애 VM에 의해 유지되어 리플랙션을 통해 클래스 파일의 정보를 읽어 처리 가능|O|O|O|
 ```java
 public enum RetentionPolicy {
     SOURCE,
@@ -379,26 +425,127 @@ public enum RetentionPolicy {
 public @interface AnnotationName{...}
 ```
 
-### Retention Policy 강의중 
-- 더 많은 내용은 바닥글에 잡설 참고
-- **`CLASS`**
+> CLASS Policy의 사용
+
+### Retention의 CLASS Policy 는 왜 잘 안쓰일까???
+
+- 자바의정석에서는 CLASS Policy 는 잘 사용되지 않는다고 한다
+  - **`CLASS`** Policy에 대한 기선님 설명
     - 애노테이션에 대한 정보를 클래스 파일까지, 즉 바이트 코드에도 남겨 두겠다.
     - 클래스 정보를 읽어들이는 방법(바이트 코드를 읽어들이는)을 바탕으로 애노테이션 정보를 읽어와서 처리할 수 있다.
         - 예) BYTE BUDDY, ASM 활용
     - 바이트 코드엔 남아 있지만, ***이 클래스파일을 JVM이 실행할 때 클래스에 대한 정보를 클래스로더가 읽어서 메모리에 적재하게되고,*** *이후 사용 시점에 메모리에서 읽어올 때 애노테이션 정보를 제외하고 읽어옴*
-
-- **`RUNTIME`**
+- 반면 런타임은
+  - **`RUNTIME`** Policy에 대한 백기선님 설명
     - 위 CLASS와 동일하지만, ***메모리에 적재된 클래스 정보를 읽어올 때 애노테이션 정보를 그대로 포함하는 것이다.***
+- 어차피 바이트코드에 포함되어 용량이 늘어나는데, 메모리에 적재되는 시점에는 무쓸모이므로 안쓰는게 아닐까 싶다
+  - 굳이 써야한다면 바이트코드에만 남기고 싶고 런타임에는 남으면 안되는 어노테이션이 필요한 경우가 될꺼같다
+  - 주로 소스 코드를 분석할 때 사용되는 범위정책이라고 함
+- 그래도 쓰는 경우 : 롬복의 `@NonNull` 어노테이션
+```java
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.LOCAL_VARIABLE, ElementType.TYPE_USE})
+@Retention(RetentionPolicy.CLASS)
+@Documented
+public @interface NonNull {
+}
+```
+> RUNTIME Policy의 사용
 
+### Reflection(리플렉션) 사용시에는 꼭 RUNTIME으로
 
-
-
-### Reflection(리플렉션) 이란?
 - 런타임에 클래스의 메타정보를 얻는 기능 , 실행도중에 동적으로 알아낼 수 있다
   - 클래스 메타정보 : 클래스 이름, 클래스 필드 갯수,정보,타입 등등, 
     - 생성자 몇개 새ㅔ
     - 메서드가 뭐고 몇개있고 등등...
 - 런타임에 어노테이션 정보를 얻으려면 RetentionPolicy 를 꼭 RUNTIME 으로 설정 해야 함
+- 다음글에서 자세이 다룸
+
+## 3) **`@Documented`** 
+
+- 애너테이션에 대한 정보가 javadoc으로 작성한 문서에 포함되도록 한다.
+```java
+@Documented
+@Retentinon(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface FuntionalInterface {}
+```
+
+## 4) **`@Inherited`**
+
+- 애너테이션이 자손 클래스에 상속되도록 한다.
+```java
+@Inherited //@SuperAnno가 자손까지 영향 미치게
+@interface SuperAnno {}
+
+@SuperAnno
+class Parent {}
+
+class Child extends Parents {}
+```
+
+## 5) **`@Repeatable`**
+
+- 선언한 애너테이션은 여러번 사용할 수 있다.
+
+```
+@Repeatable(ToDos.class) //ToDo애너테이션을 여러 번 반복해서 쓸 수 있게 한다.
+@interafce ToDo {
+  String value();
+}
+
+@ToDo("delete test codes")
+@ToDo("override inherited methods")
+class MyClass {
+  ...
+}
+```
+
+## 6) **`@Native`**
+
+- 네이티브 메서드(native method)에 의해 참조되는 상수 필드(constant field)에 붙이는 애너테이션
+  - native method : JVM이 설치된 OS의 고유의 메서드, 시스템콜(By SystemProgramming)
+```java
+public class Object {
+  private static native void registerNatives();
+  
+  static {
+    registerNatives();
+  }
+  
+  protected native Object clone() throws CloneNOtSupportedException;
+  public final native Class<?> getClass();
+  public final native void notify();
+  public final native void notifiyAll();
+  public final native void wait(long timeout) throws InterruptedException;
+  public native int hashCode();
+  ...
+}
+```
+- 네이티브 코드(Native code)란?
+  - 운영체제(OS)가 직접 실행할 수 있는 코드(원시 기계 코드)
+  - 네이티브 코드는 캐시에서 보관한다.한 번 컴파일된 코드를 캐시에서 바로 실행하므로 속도가 빠르다.
+
+--------
+<br>
+<br>
+<br>
+
+--------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## 어노테이션 프로세서
 - 런타임시에 리플랙션을 사용하는 어노테이션과 달리
