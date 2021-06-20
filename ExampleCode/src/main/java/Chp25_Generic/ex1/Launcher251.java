@@ -1,6 +1,6 @@
 package Chp25_Generic.ex1;
 
-public class Launcher {
+public class Launcher251 {
 
     public static void main(String[] args) {
 
