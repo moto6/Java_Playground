@@ -225,49 +225,8 @@ private String userPassword;
 ```
 
 ## 사용법 예제코드와 테스트코드
-```java
-package 날래날래;
+- 
 
-public class AnnotationExClass {
-    @CustomAnnotation
-    private String defaultName;
-
-    @CustomAnnotation(name="철수")
-    private String customName;
-
-    public AnnotationExClass() {
-        this.defaultName = "이름없음";
-        this.customName = "이름없음";
-    }
-
-    public String getDefaultName() {
-        return defaultName;
-    }
-
-    public String getName2() {
-        return customName;
-    }
-}
-```
-
-```java
-    @Test
-    void annotationTest() {
-        AnnotationExClass annotationExClass = new AnnotationExClass();
-        System.out.println("defaultName : " + annotationExClass.getDefaultName() + "\ncustomName : " + annotationExClass.getName2());
-
-
-        Field[] fields = annotationExClass.getClass().getDeclaredFields();
-        for(Field field : fields){
-            System.out.print(field.getName() +" : ");
-            Annotation[] annotations = field.getDeclaredAnnotations();
-            for (Annotation annotation : annotations) {
-                CustomAnnotation customAnnotation = (CustomAnnotation) annotation;
-                System.out.println(customAnnotation.name());
-            }
-        }
-    }
-```
 - 결과
   - 결과물을 보면 매개변수의 값은 이름없음이지만 각 필드에 할당된 어노테이션의 필드 값은 다른 것을 볼 수 있다.
   - 만일, 어노테이션에 Retention을 RUNTIME으로 하지 않으면 아래와 같이 런타임시에 동작하는 reflection을 이용해서 값을 불러오지 못한다.
