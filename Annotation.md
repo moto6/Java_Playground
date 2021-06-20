@@ -212,11 +212,11 @@ public @interface DongAnnotation {
 - 실제 사용 예시
 ```java
 @Controller(name="main")
-public class MainController{...}
+public `a` MainController{...}
 ```
 ```java
 @Controller(name="main")
-public class MainController{...}
+public `a` MainController{...}
 ```
 ```java
 @JsonProperty("user_id")
@@ -250,10 +250,10 @@ enum TestType {FIRST, FINAL}
 }
 
 @TestInfo(testBy = "Dong", testDate = @Date(yyyymmdd = "20210619"))
-public class Launcher301 {
+public `a` Launcher301 {
     public static void main(String[] args) {
-        Class<Launcher301> lan301class = Launcher301.class;
-        TestInfo annotationTestInfo = lan301class.getAnnotation(TestInfo.class);
+        `a`<Launcher301> lan301`a` = Launcher301.`a`;
+        TestInfo annotationTestInfo = lan301`a`.getAnnotation(TestInfo.`a`);
 
         System.out.println("testBy = " + annotationTestInfo.testBy());
         System.out.println("testDate = " + annotationTestInfo.testDate().yyyymmdd());
@@ -262,7 +262,7 @@ public class Launcher301 {
             System.out.println("testTools = " + str);
         }
 
-        for (Annotation a : Launcher301.class.getAnnotations()) {
+        for (Annotation a : Launcher301.`a`.getAnnotations()) {
             System.out.println(a);
         }
         System.out.println(annotationTestInfo);
@@ -320,7 +320,7 @@ public @interface SuppressWarnings{
 
 |ElementType 열거형 상수 | 적용 대상 |설명|
 | :------ | :--- | :--- | 
-|TYPE|클래스, 인터페이스, 열거 타입|Class, Interface(어노테이션 타입 포함), enum, jdk14에 생긴 record|
+|TYPE|클래스, 인터페이스, 열거 타입|`a`, Interface(어노테이션 타입 포함), enum, jdk14에 생긴 record|
 |ANNOTATION_TYPE|어노테이션||
 |FIELD|필드 값|프로퍼티, enum 포함|
 |CONSTRUCTOR|생성자||
@@ -353,13 +353,13 @@ import static java.lang.annotation.ElementType.*;
 public @interface MyAnnotation{}
 
 @MyAnnotation                // 적용 대상이 TYPE 인 경우
-class MyClass{
+`a` My`a`{
 
 	@MyAnnotation              // 적용 대상이 FIELD 인 경우
 	int i;
 
 	@MyAnnotation              // 적용 대상이 TYPE_USE 인 경우
-	MyClass myClass;
+	My`a` my`a`;
 
 }
 ```
@@ -409,12 +409,12 @@ public @interface AnnotationName{...}
 |RetentionPolicy 열거형 상수|설명|source|complier|JVM|
 | :-- | :-- | :-- | :-- | :-- |
 |SOURCE|소스코드상에서만 어노테이션에 의미가 있고, 바이트코드상에서는 정보가 없음, 컴파일러에 의해 버려지는 정보|O|X|X|
-|CLASS|바이트 코드 파일까지 어노테이션 정보를 유지, 리플렉션을 이용할수 없다, 클래스파일에는 존재하지만 런타임 시에 유지할 필요 없다는 것을 알리고 이 값이 default이다|O|O|X|
+|`a`|바이트 코드 파일까지 어노테이션 정보를 유지, 리플렉션을 이용할수 없다, 클래스파일에는 존재하지만 런타임 시에 유지할 필요 없다는 것을 알리고 이 값이 default이다|O|O|X|
 |RUNTIME| 클래스파일에도 존재하고 런타임애 VM에 의해 유지되어 리플랙션을 통해 클래스 파일의 정보를 읽어 처리 가능|O|O|O|
 ```java
 public enum RetentionPolicy {
     SOURCE,
-    CLASS,
+    `a`,
     RUNTIME
 }
 ```
@@ -425,26 +425,26 @@ public enum RetentionPolicy {
 public @interface AnnotationName{...}
 ```
 
-> CLASS Policy의 사용
+> `a` Policy의 사용
 
-### Retention의 CLASS Policy 는 왜 잘 안쓰일까???
+### Retention의 `a` Policy 는 왜 잘 안쓰일까???
 
-- 자바의정석에서는 CLASS Policy 는 잘 사용되지 않는다고 한다
-  - **`CLASS`** Policy에 대한 기선님 설명
+- 자바의정석에서는 `a` Policy 는 잘 사용되지 않는다고 한다
+  - **``a``** Policy에 대한 기선님 설명
     - 애노테이션에 대한 정보를 클래스 파일까지, 즉 바이트 코드에도 남겨 두겠다.
     - 클래스 정보를 읽어들이는 방법(바이트 코드를 읽어들이는)을 바탕으로 애노테이션 정보를 읽어와서 처리할 수 있다.
         - 예) BYTE BUDDY, ASM 활용
     - 바이트 코드엔 남아 있지만, ***이 클래스파일을 JVM이 실행할 때 클래스에 대한 정보를 클래스로더가 읽어서 메모리에 적재하게되고,*** *이후 사용 시점에 메모리에서 읽어올 때 애노테이션 정보를 제외하고 읽어옴*
 - 반면 런타임은
   - **`RUNTIME`** Policy에 대한 백기선님 설명
-    - 위 CLASS와 동일하지만, ***메모리에 적재된 클래스 정보를 읽어올 때 애노테이션 정보를 그대로 포함하는 것이다.***
+    - 위 `a`와 동일하지만, ***메모리에 적재된 클래스 정보를 읽어올 때 애노테이션 정보를 그대로 포함하는 것이다.***
 - 어차피 바이트코드에 포함되어 용량이 늘어나는데, 메모리에 적재되는 시점에는 무쓸모이므로 안쓰는게 아닐까 싶다
   - 굳이 써야한다면 바이트코드에만 남기고 싶고 런타임에는 남으면 안되는 어노테이션이 필요한 경우가 될꺼같다
   - 주로 소스 코드를 분석할 때 사용되는 범위정책이라고 함
 - 그래도 쓰는 경우 : 롬복의 `@NonNull` 어노테이션
 ```java
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.LOCAL_VARIABLE, ElementType.TYPE_USE})
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.`a`)
 @Documented
 public @interface NonNull {
 }
@@ -481,9 +481,9 @@ public @interface FuntionalInterface {}
 @interface SuperAnno {}
 
 @SuperAnno
-class Parent {}
+`a` Parent {}
 
-class Child extends Parents {}
+`a` Child extends Parents {}
 ```
 
 ## 5) **`@Repeatable`**
@@ -491,14 +491,14 @@ class Child extends Parents {}
 - 선언한 애너테이션은 여러번 사용할 수 있다.
 
 ```
-@Repeatable(ToDos.class) //ToDo애너테이션을 여러 번 반복해서 쓸 수 있게 한다.
+@Repeatable(ToDos.`a`) //ToDo애너테이션을 여러 번 반복해서 쓸 수 있게 한다.
 @interafce ToDo {
   String value();
 }
 
 @ToDo("delete test codes")
 @ToDo("override inherited methods")
-class MyClass {
+`a` My`a` {
   ...
 }
 ```
@@ -508,7 +508,7 @@ class MyClass {
 - 네이티브 메서드(native method)에 의해 참조되는 상수 필드(constant field)에 붙이는 애너테이션
   - native method : JVM이 설치된 OS의 고유의 메서드, 시스템콜(By SystemProgramming)
 ```java
-public class Object {
+public `a` Object {
   private static native void registerNatives();
   
   static {
@@ -516,7 +516,7 @@ public class Object {
   }
   
   protected native Object clone() throws CloneNOtSupportedException;
-  public final native Class<?> getClass();
+  public final native `a`<?> get`a`();
   public final native void notify();
   public final native void notifiyAll();
   public final native void wait(long timeout) throws InterruptedException;
@@ -536,28 +536,148 @@ public class Object {
 --------
 
 ## 어노테이션 프로세서
-- 런타임시에 리플랙션을 사용하는 어노테이션과 달리
-- 컴파일 타임에 이루어지는것을 어노테이션 프로세서
-- 컴파일 타임에 어노테이션들을 프로세싱하는 javac에 속한 빌드 툴로 어노테이션의 소스코드를 분석하고 처리하기 위해 사용되는 훅(갈고리?)이다.
+- 자바 컴파일러 플러그인 어노테이션에 대한 코드베이스를 검사, 수정, 생성하는 역할을 가지는 플러그인
+  - 어노테이션 프로세서는 컴파일 타임에 동작
+  - 그냥 어노테이션과 다른점은 **`런타임`**에 리플랙션을 사용
+- 컴파일 타임에 어노테이션들을 프로세싱하는 javac에 속한 빌드 툴로 어노테이션의 소스코드를 분석하고 처리하기 위해 사용되는 Hook(갈고리) 이다.
+- 컴파일 시점에 끼어들어서 특정 애너테이션이 붙어있는 소스코드를 참고해서 또 다른 애너테이션을 만드는 기능
+- 특정 애노테이션을 위한 자신만의 애노테이션 프로세스를 등록할 수 있음.
+- Java코드 혹은 컴파일된 Java Bytecode를 입력으로 받아서, 파일을(대개는 .java 파일) 출력으로 생성
+- 즉, 자바 코드를 생성해낼 수 있고, .java 파일에 담기게 됨.
+- 메서드를 추가하기 위해, 이미 존재하는 자바 클래스파일을 조작X
+- 애노테이션 프로세서는 기존 파일을 변경하는 것이 아니라, 새로운 파일을 생성
+
+### 애노테이션 프로세서의 사용예
+
+- QueryDSL, JPA, Lombok, MapStruct
 - 보일러플레이트 코드를 제거하는데 도움이 된다.
   - ( AbstractProcessor를 implements하여 구현체를 만들 수 있으며 Lombok의 @Getter, @Setter와 같은 어노테이션을 이용하는 것만으로도 컴파일 타임에 알아서 getter/setter를 만들어주는 방식으로 보일러플레이트 코드 제거 )
-### 어노테이션 프로세서는 보완이 필요하다
-- 호눅스 예제인데 몰라
-- https://velog.io/@honux/백기선-자바-라이브-스터디-13-Annotation
+  - 애노테이션 프로세서 API는 javax.annotation.processing 패키지에 있으며, 우리가 구현해야 할 주요 인터페이스는 Processor 인터페이스이며, 이를 부분적으로 구현한 추상 클래스인 AbstractProcessor 클래스
+
+## 애노테이션 프로세서 API
+- 아 나도 잘 모르겠다.. 공부를 부탁할께!!! 미래의 나야
+  - 이거보고 하렴 ㅎㅎ :  https://velog.io/@dion/백기선님-온라인-스터디-12주차-Annotation
+- 애노테이션 프로세서는 여러 라운드로 수행
+- 컴파일러가 소스파일에서 애노테이션 검색
+- 애노테이션에 적합한 애노테이션 프로세서 선택
+- 각각의 애노테이션 프로세스는 그것과 일치하는 애노테이션이 발견되었을 때 호출.
+- 각 라운드에서 만들어진 .java 파일을 입력으로 해서 새로운 라운드가 시작됨. (새로운 파일이 더 이상 생겨나지 않을 때까지 애노테이션 프로세서 수행)
+
+## 애노테이션 프로세서 만들기 실습
+- 이것도 보고 공부해보겠니 ㅎㅎ : https://www.youtube.com/watch?v=FPoRoSvJJNs
+- 노을 스터디 : https://github.com/codesquad-study/java/blob/main/Week12/%EB%85%B8%EC%9D%84/README.md
+- 좋아보이는데 이것도 : https://andole98.github.io/java/java-annotation-process/#
+
+### Boiler plate Code 
+- 코딩에서의 Boiler plate 는 꼭 필요한 간단한 기능인데, 반복적인 코드를 필요로 하며, 이것이 중복되어 많은 양의 코드를  양산하는 것을 이야기하는데, 소위 말하는 "찍어내는 코드" 
+- Boiler plate 는 굳이 번역하자면 "물건 찍어내는 틀(금형?)
+  - 하나의 variable 에 대한 get/set function(함수)
+    ```java
+    int age;
+    
+    int getAge() {
+      return age;
+    }
+
+    void setAge(int updateAge) {
+      this.age = updateAge
+    }
+    ```
+  - JDBC를 사용하는 데이터베이스 접근코드
+    ```
+    선배님들... ㅠㅠ
+    ```
+
+## 어노테이션 프로세서 
+- from 제인 : https://github.com/codesquad-study/java/blob/main/Week12/jane/WEEK12.md
+- 컴파일 타임에 애노테이션의 정보를 참고하여 새로운 소스코드, 메타데이터, 다큐멘테이션 등을 만들어낼 수 있다.
+- 등록 방법
+  - META-INF > services > javax.annotation.processing.Processor 안에 AbstractProcessor 클래스를 상속받는 클래스의 FQCN(Full Qualified Class Name)을 작성하면 된다.
+- 롬복 뜯어보기
+```java
+javax.annotation.processing.Processor에 들어가면 아래와 같은 내용이 존재한다.
+lombok.launch.AnnotationProcessorHider$AnnotationProcessor
+lombok.launch.AnnotationProcessorHider$ClaimingProcessor
+AnnotationProcessHider 안에 가보면 AnnotationProcessor 클래스와 ClaimingProcess 클래스가 AbstractProcessor 클래스를 상속받고있다는 것을 알 수 있다.
+import javax.lang.model.element.TypeElement;
+
+import sun.misc.Unsafe;
+
+class AnnotationProcessorHider {
+
+	public static class AstModificationNotifierData {
+		public volatile static boolean lombokInvoked = false;
+	}
+	
+	public static class AnnotationProcessor extends AbstractProcessor {
+		private final AbstractProcessor instance = createWrappedInstance();
+		
+		@Override public Set<String> getSupportedOptions() {
+			return instance.getSupportedOptions();
+		}
+       (...)
+	}
+	
+	@SupportedAnnotationTypes("lombok.*")
+	public static class ClaimingProcessor extends AbstractProcessor {
+		(...)
+	}
+}
 ```
-package com.example;
+- AbstractProcessor는 구체적인 애너테이션 프로세서들을 편리하게 작성하기 위해 고안된 수퍼 클래스이다.
+```java
+public abstract class AbstractProcessor implements Processor {
 
-@SupportedSourceVersion(SourceVersion.latestSupported())
-@SupportedAnnotationTypes({
-   // Set of full qullified annotation type names
- })
-public class MyProcessor extends AbstractProcessor {
+    protected ProcessingEnvironment processingEnv;
+    private boolean initialized = false;
+    
+    protected AbstractProcessor() {}
 
-	@Override
-	public synchronized void init(ProcessingEnvironment env){ }
+    /**
+     * If the processor class is annotated with {@link
+     * SupportedOptions}, return an unmodifiable set with the same set
+     * of strings as the annotation.  If the class is not so
+     * annotated, an empty set is returned.
+     *
+     * @return the options recognized by this processor, or an empty
+     * set if none
+     */
+    public Set<String> getSupportedOptions() {
+        SupportedOptions so = this.getClass().getAnnotation(SupportedOptions.class);
+        if  (so == null)
+            return Collections.emptySet();
+        else
+            return arrayToSet(so.value(), false);
+    }
+}
+```
+- @Builder
+```java
+package lombok;
 
-	@Override
-	public boolean process(Set<? extends TypeElement> annoations, RoundEnvironment env) { }
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+@Target({TYPE, METHOD, CONSTRUCTOR})
+@Retention(SOURCE)
+public @interface Builder {
+	/**
+	 * The field annotated with {@code @Default} must have an initializing expression; that expression is taken as the default to be used if not explicitly set during building.
+	 */
+	@Target(FIELD)
+	@Retention(SOURCE)
+	public @interface Default {}
+
+	/** @return Name of the method that creates a new builder instance. Default: {@code builder}. If the empty string, suppress generating the {@code builder} method. */
+	String builderMethodName() default "builder";
+	
+	/** @return Name of the method in the builder class that creates an instance of your {@code @Builder}-annotated class. */
+	String buildMethodName() default "build";
+	
+    (...)
 }
 ```
 
@@ -607,7 +727,7 @@ public class MyProcessor extends AbstractProcessor {
 ```
 
 ### 리텐션 폴리시(어노테이션 유지정책) 강의중 포인트
-- *SOURCE → CLASS → RUNTIME*
+- *SOURCE → `a` → RUNTIME*
 
 - `**SOURCE`** 는 소스코드에만 유지하겠다.
     - 컴파일 시에만 사용하겠다는 의미 !
@@ -615,18 +735,18 @@ public class MyProcessor extends AbstractProcessor {
 
         → 필요없으니까!, 바이트 코드에 남아있지도 않다.
 
-- `**CLASS**`
+- `**`a`**`
     - 애노테이션에 대한 정보를 클래스 파일까지, 즉 바이트 코드에도 남겨 두겠다.
     - 클래스 정보를 읽어들이는 방법(바이트 코드를 읽어들이는)을 바탕으로 애노테이션 정보를 읽어와서 처리할 수 있다.
         - 예) BYTE BUDDY, ASM 활용
     - 바이트 코드엔 남아 있지만, ***이 클래스파일을 JVM이 실행할 때 클래스에 대한 정보를 클래스로더가 읽어서 메모리에 적재하게되고,*** *이후 사용 시점에 메모리에서 읽어올 때 애노테이션 정보를 제외하고 읽어옴*
 
 - **`RUNTIME`**
-    - 위 CLASS와 동일하지만, ***메모리에 적재된 클래스 정보를 읽어올 때 애노테이션 정보를 그대로 포함하는 것이다.***
+    - 위 `a`와 동일하지만, ***메모리에 적재된 클래스 정보를 읽어올 때 애노테이션 정보를 그대로 포함하는 것이다.***
 
 바이트 코드에서 읽어오는게 빠르냐? 
 
-- RetentionPolicy를 CLASS로 한 이후, 바이트코드를 읽어 처리하는 라이브러리를 활용?!
+- RetentionPolicy를 `a`로 한 이후, 바이트코드를 읽어 처리하는 라이브러리를 활용?!
 
 리플렉션으로 읽어오는게 빠르냐? 
 
@@ -642,7 +762,7 @@ public class MyProcessor extends AbstractProcessor {
 
 커스텀하게 만든 애노테이션이 정말로 `**RUNTIME`** 까지 필요한 정보인가?
 
-RUNTIME 까지 사용할 필요가 없다면, CLASS 레벨로 내려가거나 SOURCE 레벨로 내려갈 수도 있을 것이다.
+RUNTIME 까지 사용할 필요가 없다면, `a` 레벨로 내려가거나 SOURCE 레벨로 내려갈 수도 있을 것이다.
 
 그냥, 의례적으로 RUNTIME으로 작성하는 경우가 있었다면? 그 역할을 다시 살펴보고 명확한 Retention Policy 를 정의하자.
 
@@ -686,7 +806,7 @@ public @interface SsonAnnotation {
 package com.ssonsh.study.annotationstudy;
 
 @SsonAnnotation
-public class SsonClass {
+public `a` Sson`a` {
 
     @SsonAnnotation
     private String name;
@@ -701,7 +821,7 @@ public class SsonClass {
 }
 ```
 
-- [SsonClass](http://ssonclass.java) 클래스에 선언된 Annotation을 리플랙션을 이용해 확인할 수 있다.
+- [Sson`a`](http://sson`a`.java) 클래스에 선언된 Annotation을 리플랙션을 이용해 확인할 수 있다.
 
 ```java
 package com.ssonsh.study.annotationstudy;
@@ -709,13 +829,13 @@ package com.ssonsh.study.annotationstudy;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
-public class App {
+public `a` App {
 
     public static void main(String[] args){
 
-        Arrays.stream(SsonClass.class.getAnnotations()).forEach(System.out::println);
+        Arrays.stream(Sson`a`.`a`.getAnnotations()).forEach(System.out::println);
 
-        Field[] declaredFields = SsonClass.class.getDeclaredFields();
+        Field[] declaredFields = Sson`a`.`a`.getDeclaredFields();
         for (Field declaredField : declaredFields) {
             Arrays.stream(declaredField.getAnnotations()).forEach(System.out::println);
         }
@@ -726,7 +846,7 @@ public class App {
 결과
 
 ```java
-"C:\Program Files\Java\jdk1.8.0_251\bin\java.exe" -agentlib:jdwp=transport=dt_shmem,address=javadebug,suspend=y,server=n -javaagent:C:\Users\ssh1224\.IntelliJIdea2019.3\system\captureAgent\debugger-agent.jar -Dfile.encoding=UTF-8 -classpath "C:\Program Files\Java\jdk1.8.0_251\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\deploy.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\access-bridge-64.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\cldrdata.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\jaccess.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\jfxrt.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\nashorn.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\sunpkcs11.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\zipfs.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\javaws.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\jfxswt.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\management-agent.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\plugin.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\rt.jar;D:\dev\workspace\java-study\out\production\java-study;D:\dev\workspace\java-study\lib\archunit-0.12.0.jar;D:\dev\workspace\java-study\lib\slf4j-api-1.7.25.jar;C:\Program Files\JetBrains\IntelliJ IDEA 2019.3.5\lib\idea_rt.jar" com.ssonsh.study.annotationstudy.App
+"C:\Program Files\Java\jdk1.8.0_251\bin\java.exe" -agentlib:jdwp=transport=dt_shmem,address=javadebug,suspend=y,server=n -javaagent:C:\Users\ssh1224\.IntelliJIdea2019.3\system\captureAgent\debugger-agent.jar -Dfile.encoding=UTF-8 -`a`path "C:\Program Files\Java\jdk1.8.0_251\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\deploy.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\access-bridge-64.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\cldrdata.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\jaccess.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\jfxrt.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\nashorn.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\sunpkcs11.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\zipfs.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\javaws.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\jfxswt.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\management-agent.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\plugin.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\rt.jar;D:\dev\workspace\java-study\out\production\java-study;D:\dev\workspace\java-study\lib\archunit-0.12.0.jar;D:\dev\workspace\java-study\lib\slf4j-api-1.7.25.jar;C:\Program Files\JetBrains\IntelliJ IDEA 2019.3.5\lib\idea_rt.jar" com.ssonsh.study.annotationstudy.App
 Connected to the target VM, address: 'javadebug', transport: 'shared memory'
 @com.ssonsh.study.annotationstudy.SsonAnnotation()
 @com.ssonsh.study.annotationstudy.SsonAnnotation()
@@ -745,17 +865,17 @@ Process finished with exit code 0
 public @interface FunctionalInterface{}
 ```
 
-유지 정책을 **`"CLASS"`** 으로 한다면 
+유지 정책을 **`"`a`"`** 으로 한다면 
 
 컴파일러가 애너테이션의 정보를 클래스 파일에 저장할 수 있게 하지만,
 
 클래스 파일이 **JVM에 로딩 될 때는 애너테이션의 정보가 무시**되어 실행 시에 애너테이션에 대한 정보를 얻을 수 없다.
 
-→ CLASS 가 유지정책의 기본값임에도 불구하고 잘 사용되지 않는 이유
+→ `a` 가 유지정책의 기본값임에도 불구하고 잘 사용되지 않는 이유
 
 지역 변수에 붙은 애너테이션은 컴파일러만 인식할 수 있으므로, 유지 정책이 RUNTIME인 애너테이션을 지역변수에 붙여도 실행 시에는 인식되지 않는다.
 
-- `**유지 정책을 CLASS**`로 변경하여 위에서 확인한 예시를 실행해보자.
+- `**유지 정책을 `a`**`로 변경하여 위에서 확인한 예시를 실행해보자.
 
 ```java
 package com.ssonsh.study.annotationstudy;
@@ -765,7 +885,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.`a`)
 @Target({ElementType.TYPE, ElementType.FIELD})
 public @interface SsonAnnotation {
 }
@@ -777,13 +897,13 @@ package com.ssonsh.study.annotationstudy;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
-public class App {
+public `a` App {
 
     public static void main(String[] args){
 
-        Arrays.stream(SsonClass.class.getAnnotations()).forEach(System.out::println);
+        Arrays.stream(Sson`a`.`a`.getAnnotations()).forEach(System.out::println);
 
-        Field[] declaredFields = SsonClass.class.getDeclaredFields();
+        Field[] declaredFields = Sson`a`.`a`.getDeclaredFields();
         for (Field declaredField : declaredFields) {
             Arrays.stream(declaredField.getAnnotations()).forEach(System.out::println);
         }
@@ -794,7 +914,7 @@ public class App {
 결과
 
 ```java
-"C:\Program Files\Java\jdk1.8.0_251\bin\java.exe" -agentlib:jdwp=transport=dt_shmem,address=javadebug,suspend=y,server=n -javaagent:C:\Users\ssh1224\.IntelliJIdea2019.3\system\captureAgent\debugger-agent.jar -Dfile.encoding=UTF-8 -classpath "C:\Program Files\Java\jdk1.8.0_251\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\deploy.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\access-bridge-64.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\cldrdata.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\jaccess.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\jfxrt.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\nashorn.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\sunpkcs11.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\zipfs.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\javaws.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\jfxswt.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\management-agent.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\plugin.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\rt.jar;D:\dev\workspace\java-study\out\production\java-study;D:\dev\workspace\java-study\lib\archunit-0.12.0.jar;D:\dev\workspace\java-study\lib\slf4j-api-1.7.25.jar;C:\Program Files\JetBrains\IntelliJ IDEA 2019.3.5\lib\idea_rt.jar" com.ssonsh.study.annotationstudy.App
+"C:\Program Files\Java\jdk1.8.0_251\bin\java.exe" -agentlib:jdwp=transport=dt_shmem,address=javadebug,suspend=y,server=n -javaagent:C:\Users\ssh1224\.IntelliJIdea2019.3\system\captureAgent\debugger-agent.jar -Dfile.encoding=UTF-8 -`a`path "C:\Program Files\Java\jdk1.8.0_251\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\deploy.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\access-bridge-64.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\cldrdata.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\dnsns.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\jaccess.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\jfxrt.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\localedata.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\nashorn.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\sunec.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\sunjce_provider.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\sunmscapi.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\sunpkcs11.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\ext\zipfs.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\javaws.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\jce.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\jfr.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\jfxswt.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\management-agent.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\plugin.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\resources.jar;C:\Program Files\Java\jdk1.8.0_251\jre\lib\rt.jar;D:\dev\workspace\java-study\out\production\java-study;D:\dev\workspace\java-study\lib\archunit-0.12.0.jar;D:\dev\workspace\java-study\lib\slf4j-api-1.7.25.jar;C:\Program Files\JetBrains\IntelliJ IDEA 2019.3.5\lib\idea_rt.jar" com.ssonsh.study.annotationstudy.App
 Connected to the target VM, address: 'javadebug', transport: 'shared memory'
 Disconnected from the target VM, address: 'javadebug', transport: 'shared memory'
 Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
@@ -802,4 +922,4 @@ Picked up JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
 Process finished with exit code 0
 ```
 
-런타임 시 리플랙션을 이용해 선언된 애노테이션을 가져오고자 하였으나, 아무런 정보가 출력되지 않음을 확인할 수 있다. (유지정책 → CLASS)
+런타임 시 리플랙션을 이용해 선언된 애노테이션을 가져오고자 하였으나, 아무런 정보가 출력되지 않음을 확인할 수 있다. (유지정책 → `a`)
