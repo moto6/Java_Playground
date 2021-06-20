@@ -50,7 +50,6 @@ public class ArticleController {
   - @Controller 를 갖고있는 클래스의 **`인스턴스 생성`** 를 스프링이 한다음에 
   - 위에서 실체화 필드 DI
 
-# 너무 취워서 집에가서 한다
 
 
 ## 출처
