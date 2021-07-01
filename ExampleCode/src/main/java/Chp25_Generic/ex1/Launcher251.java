@@ -4,6 +4,8 @@ public class Launcher251 {
 
     public static void main(String[] args) {
 
+        System.out.println("안녕하세요 한글나와랴");
+
         // no generic
         Box_NOGEN boxNOGEN = new Box_NOGEN();
         boxNOGEN.setBox("DongDong");
