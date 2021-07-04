@@ -117,7 +117,7 @@ enum Gogi { PORK, BEEF, CHICKEN, TURKEY }
 - 결합단어인 경우 관례적으로 밑줄(_)로 연결해 사용
 ```java
 enum Direction {
-  SOUTH, WEST, EAST, NORTH
+  SOUTH, WEST, EAST, NORTH,
   NORTH_EAST, NORTH_WEST, 
   SOUTH_EAST, SOUTH_WEST
 }
@@ -156,69 +156,175 @@ for (Gogi d : darr) {
   - 열거 객체는 Heap 영역에 생성된다
   - 열거형 변수(혹은 상수)는 메소드 영역에 포인터로 존재하고
   - 메소드 영역에 포인터형식의 열거형 상수(혹은 변수)는 Heap영역의 열거객체를 참조한다 (중요!)
-  - 사진참고
+  - 바이트코드로 확인
+  ```java
+  Direction myDirection = Direction.EAST;
+  Integer integer = 112;
+  ```
+  - 소스코드, 코드상에서는 비슷해보이는 레퍼런스 타입 변수이지만
+  ```java
+  L0
+    LINENUMBER 15 L0
+    GETSTATIC chp11_enum/ex2/Direction.EAST : Lchp11_enum/ex2/Direction;
+    ASTORE 1
+  L1
+    LINENUMBER 16 L1
+    BIPUSH 112
+    INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer;
+    ASTORE 2
+  ```
+  - 바이트코드 상에서는 
+    - enum 변수는 GETSTATIC, 즉 heap공간에 위치한 static한 인스턴스를 가르키고 있고
+    - Integer 변수는 BIPUSH, 그냥 숫자값을 대입함을 알 수 있다!
 - Enum 클래스의 메서드
   - Enum변수(열거형 변수)는 인스턴스 내부에 Enum상수의 문자열을 내부 데이터로 갖는다
     - name() : 열거형 상수의 이름을 반환하는 메서드
   - Enum타입은 컴파일시에 java.lang.Enum 클래스를 자동상속
-    - 고로 java.lang.Enum 클래스의 메서드를 사용할 수 있다!
+  - java.lang.Enum 클래스의 메서드를 사용할 수 있다!
   ```java
   public enum Season { WINTER, SPRING, SUMMER, FALL }
   System.out.println( Season.WINTER.name()); //WINTER 출력됨
   ```
+    - name() 메서드 말고도 다양한 메서드들이 존재하므로 아래에서 다루겠습니다
 
 ---
+---
 
-# 열거형에 멤버 추가하기
+## java.lang.Enum 클래스의 메서드들
 
-[목차로]()
+- 모든 열거형의 조상(최상위) 클래스이며, 자바에서 Enum 을 사용한다면 컴파일타임에 Enum의 prototype부분이 java.lang.Enum 을 자동으로 상속
+  - JDK 를 살펴보면
+  ```java
+  public abstract class Enum<E extends Enum<E>> implements Comparable<E>, Serializable {
+  ```
+  - abstract class 가 사용되고, Comparable과 Serializable 인터페이스를 구현합니다
+  ```java
+  protected Enum(String name, int ordinal) {
+      this.name = name;
+      this.ordinal = ordinal;
+  }
+  ```
+  - Enum 클래스의 생성자의 접근제한이 protected 인데요
+  - 위 코드가 Enum 클래스 유일한 생성자이며 프로그래머는 이 생성자를 직접 호출할 수 없고, 열거형 선언(enum 키워드 사용)에 대한 응답으로 컴파일러에서 내보낸 코드에 사용됨
+- Enum 클래스가 제공하는 메서드 리스트(JDK에서 확인 가능)
+  
+  - ```finalize()``` : 해당 Enum클래스가 final 메서드를 가질 수 없게 합니다.
+  - ```getDeclaring()``` : 열거형 상수의 열거형 타입에 해당하는 Class 객체를 반환합니다.
+  - ```name()``` : 열거형 상수의 이름을 반환합니다.
+  - ```ordinal()``` : 이 열거형 상수가 정의된 순를 반환합니다.
+    ```java
+    public enum Season { WINTER, SPRING, SUMMER, FALL }
+    int ordiZero = Season.WINTER.ordinal();
+    int ordiOne = Season.SPRING.ordinal();
+    int ordiTwo = Season.SUMMER.ordinal();
+    int ordiThree = Season.FALL.ordinal();
+    ```
+      - ***```ordinal```*** 메서드로 로직을 만드는게 엄청난 안티패턴 (아래에서 설명)
+  - ```values()``` : 열거형의 모든 상수를 배열에 담아 반환합니다.
+	  - Direction[] arr = Direction.values();
+  - ```valueOf(String name)``` : 열거형 상수의 이름으로 문자열 상수에 대한 참조를 얻을 수 있게 해줍니다.
+	  - Direction.WEST == Direction.valueOf("WEST"); // true 반환
+    - Enum클래스는 VO 같은 개념이라 객체 중복생성으로 인한 동등비교 문제가 없다
+  - Object 클래스
+    - ```compareTo(E o)``` : ordinal을 기준으로 지정된 객체와 비교합니다.크면 양수 작으면 음수 같으면 0을 반환
+      - 순서는 ordinal() 메서드의 값을 기준으로 순서가 비교되며, Sort도 가능하다
+    - ```eqauls(Object other)``` : 지정된 객체(other)가 열거형 상수와 같으면 true를 반환합니다.
+    - ```toString()``` : 열거형 상수의 이름을 반환
+    - ```hashCode()``` : 열거형 상수의 해시 코드를 반환합니다.
 
+
+## 인스턴스 변수를 추가하기
+```java
+public enum Element {
+    H("Hydrogen"),
+    HE("Helium"),
+    // ...
+    NE("Neon");
+ 
+    public final String label;
+ 
+    private Element(String label) {
+        this.label = label;
+    }
+}
+```
+- private 생성자를 통해서 new로 인스턴스를 생성하는 것은 불가능하지만 인자가 있는 enum을 위한 생성자를 정의할 수 있다. 
+- enum의 기본 필드인 name과 별개로 label이라는 필드를 선언했으며, 인자로 label을 전달함으로써 개별 enum항목에서 Enum.name()메소드와의 구분했다.
+- enum은 상수로 사용되기 때문에 label 필드는 final로 label이 생성 후에 변경되는 것을 방지했다. 
+- label필드는 public 으로 선언하여 아래와 같이 접근 가능하도록 한다.
+
+### 열거형에 멤버, 인스턴스 변수를 추가해야 하는 이유는 위에서 언급한 ordinal() 메서드가 가지고 있는 치명적인 부작용 때문에!
+
+- 위에서 ordinal()은 안티패턴이니 사용하지 않는것을 추천드렸는데 그 이유는 아래 코드로 설명하겠습니다.
+```java
+public enum City {
+  서울, 성남, 인천, 수원, 대전, 부산, 춘천
+  //0,  1,   2,   3,  4,   5,   6 //ordinal()값
+}
+```
+- 상수가 enum에서 몇 번째 위치인지 판단하려고 ordinal()을 사용하는데요
+- 유지보수나 기능추가의 이유로 ```서울```과 ```성남``` 사이에 ```강릉```이라는 도시를 집어넣어야 하는 경우
+```java
+public enum City {
+  서울, 강릉, 성남, 인천, 수원, 대전, 부산, 춘천
+  //0,  1,   2,   3,  4,   5,   6,   7
+}
+```
+- 성남부터 끝까지의 ordinal() 번호가 하나씩 밀리는 모습을 확인할수 있는데, 이걸 다 일일이 찾아서 고치려면.. ㅠㅠ..
+  - 의도한 상수 순서가 만약에 유지보수하면서 바뀐다면? ordinal()를 호출했던 로직들은 모두 깨진다
+
+### 그래서 해결책
+- enum에 인스턴스 변수를 추가하는 방법으로 처리
+```java
+public enum City {
+  서울(0), 강릉(3), 성남(4), 인천(5), 수원(7), 대전(8), 부산(11), 춘천(19)
+  //0,  1,   2,   3,  4,   5,   6,   7
+}
+```
+- 여기서 중요한 뽀인트는 서울-강릉 사이 0 -> 3으로 넘어간 부분인데요
+  - 나중에 서울과 강릉사이에 "가평" 등을 추가할 수 있도록 숫자를 중간중간에 비워놓는 꿀팁!
+  - 백기선님께서 수업시간에 언급해주신 부분인데 나중에 인강좀 듣고 보완할예정 @Todo
+
+### Enum에 멤버 추가하기
+- enum 상수와 연관된 데이터를 상수 자체에 포함시켜 용이하게 관리하기 위해서 Enum에 멤버를 추가함
+
+```java
+public enum SearchSite {
+	NAVER("https://www.naver.com"),
+	DAUM("https://www.daum.net"),
+	GOOGLE("https://www.google.com"),
+	BING("https://www.bing.com");
+ 
+	private final String url; // 인스턴스 필드 추가
+ 
+	// 생성자 추가
+	SearchSite(String url) { this.url = url; }
+ 
+	// 인스턴스 필드 get메서드 추가
+	public String getUrl() { return url; }
+}
+```
+- 위 코드처럼 이넘에 인스턴스 필드를 추기하려면 enum 상수의 이름 옆에 원하는 값을 괄호()와 함께 적어주세요
+
+```java
+public class Site {
+  static final SearchSite NAVER = new SearchSite("NAVER", "https://www.naver.com");
+
+  private final String name;
+  private final String url;
+
+  SearchSite(String name, String url) {
+      this.name = name;
+      this.url = url;
+  }
+```
  
 
----
+
 
 ---
 
-# 열거형의 이해
-
-[목차로]()
-
----
-
----
-
-# java.lang.Enum 클래스의 메서드들
-
-[목차로]()
-
-- 모든 열거형의 조상(최상위) 클래스이며
-- 자바에서 Enum 을 사용한다면 컴파일타임에 Enum의 prototype부분이 java.lang.Enum 을 자동으로 상속받음
-- protected Enum(String name, int ordinal)
-
-    : 유일한 생성자로 프로그래머는 이 생성자를 호출할 수 없고, 열거형 선언(enum 키워드 사용)에 대한 응답으로 컴파일러에서 내보낸 코드에 사용됨
-
-- Enum 파일에서 확인할 수 있는 지원 메서드 리스트
-
-```
-compareTo(E o) : ordinal을 기준으로 지정된 객체와 비교합니다.크면 양수 작으면 음수 같으면 0을 반환
-eqauls(Object other) : 지정된 객체(other)가 열거형 상수와 같으면 true를 반환합니다.
-finalize() : 해당 Enum클래스가 final 메서드를 가질 수 없게 합니다.
-getDeclaring() : 열거형 상수의 열거형 타입에 해당하는 Class 객체를 반환합니다.
-hashCode() : 열거형 상수의 해시 코드를 반환합니다.
-name() : 열거형 상수의 이름을 반환합니다.
-ordinal() : 이 열거형 상수가 정의된 순서를 반환합니다.
-toString() : 열거형 상수의 이름을 반환합니다. (재정의 해서 개발자에게 더욱 친근하게 사용할 수 있습니다.)
-values() : 열거형의 모든 상수를 배열에 담아 반환합니다.
-	- Direction[] arr = Direction.values();
-valueOf(String name) : 열거형 상수의 이름으로 문자열 상수에 대한 참조를 얻을 수 있게 해줍니다.
-	- Direction.WEST == Direction.valueOf("WEST"); // true 반환
-```
-
----
-
----
-
-# EnumSet
+## EnumSet
 
 [목차로]()
 
@@ -228,7 +334,7 @@ valueOf(String name) : 열거형 상수의 이름으로 문자열 상수에 대�
     - 동기화되지 않음 (멀티쓰레드에서 사용시 주의)
     - iterator를 활용한 순회 가능(Enum으로 for문을 돌릴수 있다)
     - 생성자가 존재하지 않음
-    - 
+    - Enum의 API 문서를 보면 ordinal()은 "EnumSet, EnumMap 같은 열거 타입 기반의 범용 자료구조에 쓸 목적으로 설계되었다."라고 나와있다.
 
 - 예제코드
 
@@ -267,9 +373,75 @@ enum Flower {
     : EnumSet에 new 연산자를 사용하지 않는 이유, EnumSet은 생성자를 사용자가 호출불가이유
 
     - [https://parkadd.tistory.com/50](https://parkadd.tistory.com/50)
-- 자매품으로 EnumMap 도 있다
 
----
+
+## EnumMap이 있는데, 
+- Map을 사용한 Enum 항목 캐싱하는 용도로 사용된다
+  - 필드를 사용한 Enum항목을 찾을 때 매번 전체 Enum을 순회하는 것이 비효율적인 경우 항목들을 캐싱할 수 있다. 
+  - 다음과 같이 class가 로딩될 때 static final Map을 사용하여 캐싱한다.
+```java
+public enum Element {
+  // ...
+  private static final Map<String, Element> BY_LABEL = new HashMap<>();
+  static {
+    for (Element e : values()) {
+        BY_LABEL.put(e.label, e);
+      }
+  }
+  //...
+  public Element valueOfLabel(String label) {
+    return BY_LABEL.get(label);
+  }
+```
+- - 먼저 비효율적인 코드인데, 매번 for문을 순회함을 알수 있다
+  - 다음으로 여러 필드를 이용한 캐싱 코드를 살펴보면
+```java
+public enum Element {
+    H("Hydrogen", 1, 1.008f),
+    HE("Helium", 2, 4.0026f),
+    // ...
+    NE("Neon", 10, 20.180f);
+ 
+    private static final Map<String, Element> BY_LABEL = new HashMap<>();
+    private static final Map<Integer, Element> BY_ATOMIC_NUMBER = new HashMap<>();
+    private static final Map<Float, Element> BY_ATOMIC_WEIGHT = new HashMap<>();
+     
+    static {
+        for (Element e : values()) {
+            BY_LABEL.put(e.label, e);
+            BY_ATOMIC_NUMBER.put(e.atomicNumber, e);
+            BY_ATOMIC_WEIGHT.put(e.atomicWeight, e);
+        }
+    }
+ 
+    public final String label;
+    public final int atomicNumber;
+    public final float atomicWeight;
+ 
+    private Element(String label, int atomicNumber, float atomicWeight) {
+        this.label = label;
+        this.atomicNumber = atomicNumber;
+        this.atomicWeight = atomicWeight;
+    }
+ 
+    public static Element valueOfLabel(String label) {
+        return BY_LABEL.get(label);
+    }
+ 
+    public static Element valueOfAtomicNumber(int number) {
+        return BY_ATOMIC_NUMBER.get(number);
+    }
+ 
+    public static Element valueOfAtomicWeight(float weight) {
+        return BY_ATOMIC_WEIGHT.get(weight);
+    }
+}
+
+```
+- 출처 
+  - https://www.baeldung.com/java-enum-values
+  - https://hilucky.tistory.com/304
+  - https://effortguy.tistory.com/24
 
 ---
 
