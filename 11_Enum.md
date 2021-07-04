@@ -19,9 +19,18 @@
 ---
 
 ## Enum개요와 필요성
-- 열거형(Enum) : 한정되고 불연속적인 값만을 갖는 데이터 타입의 일종
+- 열거형(Enum) : 한정되고 불연속적인 값만을 갖는 상수의 집합
   - 예시로 방향(동, 서, 남, 북), 국가(한국, 미국 등등.. 약 200개국), 금융기관(국민은행, 기업은행 등등.. 20개 남짓)
-- 예제코드
+  - 상수라서 연산이 불가능하고
+  - 집합이라서 중복이 허용되지 않는다
+- Enum을 사용하는 이유는
+  - 코드가 단순하고 가독성이 좋습니다 : 과거에 문자열이나 정수로 ENUM을 대체할때보다 훨씬
+  - 자바의 ENUM은 버그의 가능성을 줄여줍니다 : 
+  - enum선언(prototype)시에 Enum키워드를 사용하므로 구현의도가 명확하게 표현 가능
+  - 인스턴스 생성과 상속을 방지합니다 
+    - 자바 Enum 의 생성자는 Private이라서 인스턴스를 생성할 수 없습니다
+    - 자바 Enum은 상속이 불기능합니다
+### 예제코드
 
 ```java
 enum Gogi { Pork, Beef, Chicken, Turkey }
@@ -90,28 +99,44 @@ public class ExEnum {
   ```
   - 그래서 결국 Statically typed 언어를 사용할지라도 일정부분은 불가피하게 Dayamically typed하는 부분이 발생할수 있고 **이 부분에서 논리적 에러가 발생할 가능성이 존재합니다 !**
 - 소스코드에는 Type이 결정되지 않고 컴파일타임에 결정되는 문법적인 요소가 있는데 이를 Generic(자바 제네릭) 이라고 합니다.
-  - 제네릭 링크 : 나중에추가예정
+  - 제네릭 링크 : [추가예정]
 
 ---
 
 ## Enum의 prototype, declaration, usage
 - 열거형을 하나씩 분리해서 살펴보면 
-  - prototype : 열거형을 만들고
-  - declaration : 열거형 변수를 선언해서 값을 대입하고
+  - prototype : 열거형 선언 
+  - declaration : 열거형 변수 선언 + 값 대입
 
 ### prototype
-
+- 아래처럼 열거타입을 선언할 수 있습니다
+- 열거형 Enum의 값인 열거상수들의 이름은 관례적으로 모두 대문자로 작성
 ```java
-enum Gogi { Pork, Beef, Chicken, Turkey }
+enum Gogi { PORK, BEEF, CHICKEN, TURKEY }
+```
+- 결합단어인 경우 관례적으로 밑줄(_)로 연결해 사용
+```java
+enum Direction {
+  SOUTH, WEST, EAST, NORTH
+  NORTH_EAST, NORTH_WEST, 
+  SOUTH_EAST, SOUTH_WEST
+}
+```
+- 접근제한자 public 이 enum에 쓰이는 경우 별도의 파일로 생성해줘야합니다
+  - 아래 코드의 경우 Season.Java 라는 파일명을 사용해야 하고, 파일이름이 다른경우 컴파일 에러가 발생
+```java
+public enum Season { WINTER, SPRING, SUMMER, FALL }
 ```
 
 ### declaration
-
+- 열거형 변수를 선언하고, 열거 상수값을 저장할 수 있습니다
+- 열거형 변수도 레퍼런스 타입이므로, null값을 저장할 수 있습니다.
 ```java
 Gogi pok = Gogi.Pork;
 Gogi kfc = Gogi.valueOf("Chicken");
 Gogi Sirloin = Enum.valueOf(Gogi.class, "Beef");
 Gogi samgyeobsal = Gogi.Pork;
+Gogi vegiterian = null;
 ```
 
 - 추가로  for문도 돌릴수 있는데
@@ -125,6 +150,22 @@ for (Gogi d : darr) {
 ```
 
 ---
+
+## Enum의 내부 구조
+- Enum상수는 열거 객체를 참조하는데요
+  - 열거 객체는 Heap 영역에 생성된다
+  - 열거형 변수(혹은 상수)는 메소드 영역에 포인터로 존재하고
+  - 메소드 영역에 포인터형식의 열거형 상수(혹은 변수)는 Heap영역의 열거객체를 참조한다 (중요!)
+  - 사진참고
+- Enum 클래스의 메서드
+  - Enum변수(열거형 변수)는 인스턴스 내부에 Enum상수의 문자열을 내부 데이터로 갖는다
+    - name() : 열거형 상수의 이름을 반환하는 메서드
+  - Enum타입은 컴파일시에 java.lang.Enum 클래스를 자동상속
+    - 고로 java.lang.Enum 클래스의 메서드를 사용할 수 있다!
+  ```java
+  public enum Season { WINTER, SPRING, SUMMER, FALL }
+  System.out.println( Season.WINTER.name()); //WINTER 출력됨
+  ```
 
 ---
 
@@ -146,11 +187,12 @@ for (Gogi d : darr) {
 
 ---
 
-# java.lang.Enum
+# java.lang.Enum 클래스의 메서드들
 
 [목차로]()
 
-- 모든 열거형의 조상(최 상위 클래스)
+- 모든 열거형의 조상(최상위) 클래스이며
+- 자바에서 Enum 을 사용한다면 컴파일타임에 Enum의 prototype부분이 java.lang.Enum 을 자동으로 상속받음
 - protected Enum(String name, int ordinal)
 
     : 유일한 생성자로 프로그래머는 이 생성자를 호출할 수 없고, 열거형 선언(enum 키워드 사용)에 대한 응답으로 컴파일러에서 내보낸 코드에 사용됨
@@ -233,6 +275,7 @@ enum Flower {
 
 
 ### TMI : 자바의 열거형이 C/C++열거형보다 우월한 이유
+- Java 프로그래밍 언어 열거 형은 다른 언어의 열거 형보다 훨씬 강력하다(Type Strong)
 - C/C++에서 제공하던 enum과 Java언어의 그것과는 내부 원리나 사용측면에서 완전히 다르다(근데 기능이랑 역할은 비슷하단 말이지)
   - Java의 enum에서는 열거형의 값 뿐만 아니라 타입까지 관리한다. 이를 **엄격한 타입 정의(strogly typed)**라고 한다
   - C/C++ enum에서는 열거형의 값만을 관리한다. 그러니까 C++의 Enum은 그냥 int형 정수에 껍데기만 이쁘게 덮어놓은것 
@@ -274,5 +317,7 @@ enum type과 실제 정수값을 동일시하고,
 : 용어가지고 깐깐하게 구는 교수님을 엄격한 타입정의라고 생각해도 좋다. (예를들어 국, 찌개, 전골, 탕 간의 차이를 구분하지 못하면 까였다) 
 
 
-
+- 잡소리가 길었지만, 언어별로 Enum을 대하는 관점이 다르다
+  - 자바는 서로 관련이 없는 Class Type 으로 대하는가 하면
+  - C/C++은 내부적으로 정수형으로 관리한다
 # 끝
