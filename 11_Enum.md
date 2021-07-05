@@ -151,12 +151,18 @@ for (Gogi d : darr) {
 
 ---
 
+
+
+
+
+---
+
 ## Enum의 내부 구조
 - Enum상수는 열거 객체를 참조하는데요
   - 열거 객체는 Heap 영역에 생성된다
   - 열거형 변수(혹은 상수)는 메소드 영역에 포인터로 존재하고
   - 메소드 영역에 포인터형식의 열거형 상수(혹은 변수)는 Heap영역의 열거객체를 참조한다 (중요!)
-  - 바이트코드로 확인
+  - ``바이트``코드로 확인
   ```java
   Direction myDirection = Direction.EAST;
   Integer integer = 112;
@@ -173,7 +179,7 @@ for (Gogi d : darr) {
     INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer;
     ASTORE 2
   ```
-  - 바이트코드 상에서는 
+  - ``바이트``코드 상에서는 
     - enum 변수는 GETSTATIC, 즉 heap공간에 위치한 static한 인스턴스를 가르키고 있고
     - Integer 변수는 BIPUSH, 그냥 숫자값을 대입함을 알 수 있다!
 - Enum 클래스의 메서드
@@ -190,7 +196,7 @@ for (Gogi d : darr) {
 ---
 ---
 
-## java.lang.Enum 클래스의 메서드들
+## java.lang.Enum 클래스 내부 
 
 - 모든 열거형의 조상(최상위) 클래스이며, 자바에서 Enum 을 사용한다면 컴파일타임에 Enum의 prototype부분이 java.lang.Enum 을 자동으로 상속
   - JDK 를 살펴보면
@@ -204,10 +210,19 @@ for (Gogi d : darr) {
       this.ordinal = ordinal;
   }
   ```
-  - Enum 클래스의 생성자의 접근제한이 protected 인데요
+
+### Enum의 인스턴스화(실체화) new 키워드로 사용 불가능
+
+- Enum 클래스의 생성자의 접근제한이 protected 인데요, new 키워드를 사용해서 외부에서 객체를 생성할 수 없습니다
   - 위 코드가 Enum 클래스 유일한 생성자이며 프로그래머는 이 생성자를 직접 호출할 수 없고, 열거형 선언(enum 키워드 사용)에 대한 응답으로 컴파일러에서 내보낸 코드에 사용됨
+- 생성자를 통해서 Enum상수에 다른 값을 넣는 행위를 윈천 차단(동적으로 할당할 수 없도록 강제)
+  - 실제로 ``바이트``코드 상에서 ```GETSTATIC``` 이라는 JVM명령어가 사용됨
+
+
 - Enum 클래스가 제공하는 메서드 리스트(JDK에서 확인 가능)
-  
+
+### 원조클래스가 제공하는 메서드 설명
+
   - ```finalize()``` : 해당 Enum클래스가 final 메서드를 가질 수 없게 합니다.
   - ```getDeclaring()``` : 열거형 상수의 열거형 타입에 해당하는 Class 객체를 반환합니다.
   - ```name()``` : 열거형 상수의 이름을 반환합니다.
@@ -233,25 +248,59 @@ for (Gogi d : darr) {
     - ```hashCode()``` : 열거형 상수의 해시 코드를 반환합니다.
 
 
-## 인스턴스 변수를 추가하기
+## Enum에 인스턴스 변수를 추가해서 유용하게 사용하는법
+
+### 인스턴스 변수를 추가하기
+- Enum으로 인프런 백기선님의 강의Enum, 가격, 한글설명을 포함한다면 아래와 같은 코드 작성이 가능
 ```java
-public enum Element {
-    H("Hydrogen"),
-    HE("Helium"),
-    // ...
-    NE("Neon");
- 
-    public final String label;
- 
-    private Element(String label) {
-        this.label = label;
-    }
+public enum WhiteshipLectureList {
+  THE_JAVA_JAVA_8 (55000 , "더 자바, Java8"),
+  THE_JAVA_CODE_MANIPULATION (49500 , "더 자바, 코드를 조작하는 다양한 방법"),
+  THE_JAVA_APPLICATION_TEST (66000 , "더 자바, 애플리케이션을 테스트하는 다양한 방법"),
+  SPRING_FRAMEWORK_INTRODUCTION (0 , "스프링 프레임워크 입문"),
+  SPRING_FRAMEWORK_INTRODUCTION_REVISED_EDITION (0 , "예제로 배우는 스프링 입문(개정판)"),
+  SPRING_FRAMEWORK_CORE (55000 , "스프링 프레임워크 핵심 기술"),
+  SPRING_FRAMEWORK_WEB_MVC (110000, "스프링 웹 MVC"),
+  SPRING_BOOT (110000, "스프링 부트 개념과 활용"),
+  SPRING_BOOT_UPDATED (66000 , "스프링 부트 업데이트"),
+  SPRING_AND_JPA_BASED_WEB_APPLICATION_DEVELOPMENT (330000, "스프링과 JPA 기반 웹 애플리케이션 개발"),
+  SPRING_SECURITY (88000 , "스프링 시큐리티"),
+  REST_API (99000 , "스프링 기반 REST API 개발"),
+  SPRING_DATA_JPA (88000 , "스프링 데이터 JPA"),
+  INTERVIEW_GUIDE_SOFTWARE_DEVELOPMENT_ENGINEER (220000, "더 개발자, 인터뷰 가이드");
+
+  private int price;
+  //private final int price; //final 키워드로 수정을 막을 수 있다.
+  private String koreanDescription;
+  
+  // 파라미터 두개짜리 생성자로 Enum 생성
+  WhiteshipLectureList(int price, String koreanDescription) {
+    //System.out.printf("enum constructor > price: %d , desc:%s",price,koreanDescription);
+    // 생성자가 언제 호출되는지 알아보기 위해서
+    this.price = price;
+    this.koreanDescription = koreanDescription;
+  }
+
+  // 하나짜리 생성자도 가능
+  WhiteshipLectureList(int price) {
+    this.price = price;
+  }
+
+  WhiteshipLectureList(String koreanDescription) {
+    this.koreanDescription = koreanDescription;
+  }
+
+  // getter setter
 }
+//출처: https://xxxelppa.tistory.com/204?category=858435 [한칸짜리책상서랍]
 ```
+
 - private 생성자를 통해서 new로 인스턴스를 생성하는 것은 불가능하지만 인자가 있는 enum을 위한 생성자를 정의할 수 있다. 
-- enum의 기본 필드인 name과 별개로 label이라는 필드를 선언했으며, 인자로 label을 전달함으로써 개별 enum항목에서 Enum.name()메소드와의 구분했다.
-- enum은 상수로 사용되기 때문에 label 필드는 final로 label이 생성 후에 변경되는 것을 방지했다. 
-- label필드는 public 으로 선언하여 아래와 같이 접근 가능하도록 한다.
+- enum의 기본 필드 (거론되진 않지만 내부적으로는 name이라는 이름의 필드)와 별개로 다른 필드변수들을 선언
+- enum 생성자의 입력파라미터로 전달함, Enum.name()메소드와의 구분되는 시그니쳐가 필요함
+  - 그러니까 ```new WhiteshipLectureList.REST_API()``` 이런 기본 생성자는 사용이 불가능하다
+- 필드변수들(price, koreanDescription)의 getter와 setter메서드들을 public 으로 만들어 사용
+- enum은 상수로 사용되기 때문에 필드변수들을 final로 선언해 생성 후에 변경되는 것을 방지할수도 있다
 
 ### 열거형에 멤버, 인스턴스 변수를 추가해야 하는 이유는 위에서 언급한 ordinal() 메서드가 가지고 있는 치명적인 부작용 때문에!
 
@@ -364,15 +413,58 @@ enum Flower {
 }
 ```
 
-- 실행결과
+- 이넘셋 다른 예제코드
+```java
+import java.util.EnumSet;
+ 
+public class Exam_007 {
+    public static void main(String[] args) {
+        EnumSet<MyEnum> enumSet = EnumSet.allOf(MyEnum.class);
+    
+        System.out.println("================= 전체 출력 =================");
+        System.out.println(enumSet);
+        System.out.println();
+        
+        EnumSet newEnumSet = EnumSet.of(MyEnum.MON, MyEnum.TUE, MyEnum.WED, MyEnum.THU, MyEnum.FRI);
+        
+        System.out.println("============= 특정 상수만 출력 ==============");
+        System.out.println(newEnumSet);
+        System.out.println();
+    
+        System.out.println("========== 특정 상수 제외하고 출력 ==========");
+        System.out.println(EnumSet.complementOf(newEnumSet));
+        System.out.println();
+        
+        System.out.println("================= 범위 출력 =================");
+        System.out.println(EnumSet.range(MyEnum.WED, MyEnum.FRI));
+        System.out.println();
+    }
+}
+ 
+enum MyEnum {
+    SUN, MON, TUE, WED, THU, FRI, SAT
+}
 
-![%E1%84%8C%E1%85%A1%E1%84%87%E1%85%A1%2011%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1%20-%20%E1%84%8B%E1%85%A7%E1%86%AF%E1%84%80%E1%85%A5%E1%84%92%E1%85%A7%E1%86%BC(%E1%84%89%E1%85%B3%E1%84%90%E1%85%A5%E1%84%83%E1%85%B5%20%E1%84%92%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A2)%200c9d3b0449874250a03e1a4f88124baa/Untitled%201.png](%E1%84%8C%E1%85%A1%E1%84%87%E1%85%A1%2011%E1%84%8C%E1%85%AE%E1%84%8E%E1%85%A1%20-%20%E1%84%8B%E1%85%A7%E1%86%AF%E1%84%80%E1%85%A5%E1%84%92%E1%85%A7%E1%86%BC(%E1%84%89%E1%85%B3%E1%84%90%E1%85%A5%E1%84%83%E1%85%B5%20%E1%84%92%E1%85%A1%E1%86%AF%E1%84%85%E1%85%A2)%200c9d3b0449874250a03e1a4f88124baa/Untitled%201.png)
+
+출처: https://xxxelppa.tistory.com/204?category=858435 [한칸짜리책상서랍]
+```
+
+- 이 클래스는 모든 메소드가 static 키워드를 사용하여 정의되어 있기 때문에 객체 생성없이 사용할 수 있다.
+객체 생성 없이 사용할 수 있다고 했지만 사실 객체를 생성할 수 없다.
+api 문서를 찾아보면 이 클래스는 abstract 키워드를 사용한 추상 클래스이기 때문이다.
+이 클래스에 대해 조사하다보니 비트필드에 대한 얘기가 많았다.
+이해는 했는데 어떻게 표현하고 정리해야할지 조심스러워서 잘 정리된 글을 첨부
+  - https://jaehun2841.github.io/2019/02/04/effective-java-item36/#%EC%84%9C%EB%A1%A0
+- 실행결과
 
 - 링크 : 더 알아보기 about Enumset
 
     : EnumSet에 new 연산자를 사용하지 않는 이유, EnumSet은 생성자를 사용자가 호출불가이유
 
     - [https://parkadd.tistory.com/50](https://parkadd.tistory.com/50)
+
+
+
 
 
 ## EnumMap이 있는데, 
