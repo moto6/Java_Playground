@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 
 class RelfectionTest {
     // private field!!
-    private String s;
+    private final String s;
 
     public RelfectionTest() {
         s = "This is a default value";
@@ -18,7 +18,7 @@ class RelfectionTest {
 }
 
 public class Launcher303 {
-    public static void main(String args[]) throws Exception {
+    public static void main(String[] args) throws Exception {
         RelfectionTest obj = new RelfectionTest();
 
         // getting class object

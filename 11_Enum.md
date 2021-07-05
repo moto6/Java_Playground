@@ -6,7 +6,7 @@
 - java.lang.Enum
 - EnumSet
 
----
+<br><hr><br>
 
 ## 목차
 
@@ -16,7 +16,7 @@
 - 열거형의 이해
 - java.lang.Enum 과 EnumSet
 
----
+<br><hr><br>
 
 ## Enum개요와 필요성
 - 열거형(Enum) : 한정되고 불연속적인 값만을 갖는 상수의 집합
@@ -33,54 +33,55 @@
 ### 예제코드
 
 ```java
-enum Gogi { Pork, Beef, Chicken, Turkey }
 
-public class ExEnum {
+enum Gogi {PORK, BEEF, CHICKEN, TURKEY}
+
+public class Launcher111 {
     public static void main(String[] args) {
-        
-        Gogi pok = Gogi.Pork; // 가장 흔하게 쓰이는 방식 Enum 에 .(dot)연산으로 열거형의 원소에 접근합니다
-        
-        Gogi kfc = Gogi.valueOf("Chicken"); // 이렇게 문자열에서 Enum으로 변경하며 대입도 가능합니다 1
 
-        Gogi sirloin = Enum.valueOf(Gogi.class, "Beef"); // 이렇게 문자열에서 Enum으로 변경하며 대입도 가능합니다2
-        
-        Gogi samgyeobsal = Gogi.Pork; // 예를들어 "삼겹살"이라는 변수이름에 고기 이넘을 넣어줄 수 있습니다.
+        Gogi pok = Gogi.PORK; // 가장 흔하게 쓰이는 방식 Enum 에 .(dot)연산으로 열거형의 원소에 접근합니다
+
+        Gogi kfc = Gogi.valueOf("CHICKEN"); // 이렇게 문자열에서 Enum으로 변경하며 대입도 가능합니다 1
+
+        Gogi sirloin = Enum.valueOf(Gogi.class, "BEEF"); // 이렇게 문자열에서 Enum으로 변경하며 대입도 가능합니다2
+
+        Gogi samgyeobsal = Gogi.PORK; // 예를들어 "삼겹살"이라는 변수이름에 고기 이넘을 넣어줄 수 있습니다.
 
 
         //들어가 있는 값 확인
         System.out.println("inserted : pok = " + pok);
         System.out.println("inserted : kfc = " + kfc);
-        System.out.println("inserted : Sirloin = " + Sirloin);
+        System.out.println("inserted : Sirloin = " + sirloin);
         System.out.println("");
 
         //이넘끼리 동등비교도 됩니다.
         System.out.println("compare : pok == kfc? : " + (pok == kfc));
-        System.out.println("compare : pok == Sirloin? : " + (pok == Sirloin));
+        System.out.println("compare : pok == Sirloin? : " + (pok == sirloin));
         System.out.println("compare : pok == samgyeobsal? : " + (pok == samgyeobsal));
-        System.out.println("compare : Sirloin == beef? : " + (Sirloin == Gogi.Beef));
+        System.out.println("compare : Sirloin == beef? : " + (sirloin == Gogi.BEEF));
         System.out.println("");
 
         //equals 메서드 사용도 가능합니다
-        System.out.println("pok equals Sirloin : " + pok.equals(Sirloin));
+        System.out.println("pok equals Sirloin : " + pok.equals(sirloin));
         System.out.println("pok equals samgyeobsal : " + pok.equals(samgyeobsal));
-        
+
         //compareTo 메서드 사용도 가능합니다.
         System.out.println("pok comp kfc : " + (pok.compareTo(kfc)));
-        System.out.println("pok.comp Gogi.Beef : " + (pok.compareTo(Gogi.Beef)));
+        System.out.println("pok.comp Gogi.Beef : " + (pok.compareTo(Gogi.BEEF)));
 
         //열겨형으로 반복문을 돌리면 이렇게 됩니다.
-        System.out.println("\nfoorloop Enum.values() method");
+        System.out.println("\n for loop Enum.values() method");
         Gogi[] gogis = Gogi.values();
 
         for (Gogi gogi : gogis) {
             System.out.printf("%s = %d%n", gogi.name(), gogi.ordinal());
         }
+
+        System.out.println( Gogi.BEEF.name()); //BEEF 출력됨
     }
 }
+}
 ```
-
-- 실행결과
-
 
 ### 정적타입 vs 동적타입 구분 기준
 - 변수의 Type이 결정되는 시점에 따라서 두가지로 나눠집니다 
@@ -101,7 +102,7 @@ public class ExEnum {
 - 소스코드에는 Type이 결정되지 않고 컴파일타임에 결정되는 문법적인 요소가 있는데 이를 Generic(자바 제네릭) 이라고 합니다.
   - 제네릭 링크 : [추가예정]
 
----
+<br><hr><br>
 
 ## Enum의 prototype, declaration, usage
 - 열거형을 하나씩 분리해서 살펴보면 
@@ -132,30 +133,24 @@ public enum Season { WINTER, SPRING, SUMMER, FALL }
 - 열거형 변수를 선언하고, 열거 상수값을 저장할 수 있습니다
 - 열거형 변수도 레퍼런스 타입이므로, null값을 저장할 수 있습니다.
 ```java
-Gogi pok = Gogi.Pork;
-Gogi kfc = Gogi.valueOf("Chicken");
-Gogi Sirloin = Enum.valueOf(Gogi.class, "Beef");
-Gogi samgyeobsal = Gogi.Pork;
+Gogi pok = Gogi.PORK;
+Gogi kfc = Gogi.valueOf("CHICKEN");
+Gogi Sirloin = Enum.valueOf(Gogi.class, "BEEF");
+Gogi samgyeobsal = Gogi.PORK;
 Gogi vegiterian = null;
 ```
 
 - 추가로  for문도 돌릴수 있는데
 
 ```java
-Gogi[] darr = Gogi.values();
+Gogi[] gogis = Gogi.values();
 
-for (Gogi d : darr) {
-    System.out.printf("%s = %d%n", d.name(), d.ordinal());
+for (Gogi gogi : gogis) {
+  System.out.printf("%s = %d%n", gogi.name(), gogi.ordinal());
 }
 ```
 
----
-
-
-
-
-
----
+<br><hr><br>
 
 ## Enum의 내부 구조
 - Enum상수는 열거 객체를 참조하는데요
@@ -179,7 +174,7 @@ for (Gogi d : darr) {
     INVOKESTATIC java/lang/Integer.valueOf (I)Ljava/lang/Integer;
     ASTORE 2
   ```
-  - ``바이트``코드 상에서는 
+  - ``바이트 코드`` 상에서는 완전히 다른데
     - enum 변수는 GETSTATIC, 즉 heap공간에 위치한 static한 인스턴스를 가르키고 있고
     - Integer 변수는 BIPUSH, 그냥 숫자값을 대입함을 알 수 있다!
 - Enum 클래스의 메서드
@@ -193,10 +188,9 @@ for (Gogi d : darr) {
   ```
     - name() 메서드 말고도 다양한 메서드들이 존재하므로 아래에서 다루겠습니다
 
----
----
+<br><hr><br>
 
-## java.lang.Enum 클래스 내부 
+## java.lang.Enum 클래스 
 
 - 모든 열거형의 조상(최상위) 클래스이며, 자바에서 Enum 을 사용한다면 컴파일타임에 Enum의 prototype부분이 java.lang.Enum 을 자동으로 상속
   - JDK 를 살펴보면
@@ -234,18 +228,18 @@ for (Gogi d : darr) {
     int ordiTwo = Season.SUMMER.ordinal();
     int ordiThree = Season.FALL.ordinal();
     ```
-      - ***```ordinal```*** 메서드로 로직을 만드는게 엄청난 안티패턴 (아래에서 설명)
+      - ```ordinal``` 메서드로 로직을 만드는게 엄청난 ***```안티패턴```*** (아래에서 설명)
   - ```values()``` : 열거형의 모든 상수를 배열에 담아 반환합니다.
 	  - Direction[] arr = Direction.values();
   - ```valueOf(String name)``` : 열거형 상수의 이름으로 문자열 상수에 대한 참조를 얻을 수 있게 해줍니다.
 	  - Direction.WEST == Direction.valueOf("WEST"); // true 반환
     - Enum클래스는 VO 같은 개념이라 객체 중복생성으로 인한 동등비교 문제가 없다
-  - Object 클래스
-    - ```compareTo(E o)``` : ordinal을 기준으로 지정된 객체와 비교합니다.크면 양수 작으면 음수 같으면 0을 반환
+  - Object class 상속
+    - compareTo(E o) : ordinal을 기준으로 지정된 객체와 비교합니다.크면 양수 작으면 음수 같으면 0을 반환
       - 순서는 ordinal() 메서드의 값을 기준으로 순서가 비교되며, Sort도 가능하다
-    - ```eqauls(Object other)``` : 지정된 객체(other)가 열거형 상수와 같으면 true를 반환합니다.
-    - ```toString()``` : 열거형 상수의 이름을 반환
-    - ```hashCode()``` : 열거형 상수의 해시 코드를 반환합니다.
+    - eqauls(Object other) : 지정된 객체(other)가 열거형 상수와 같으면 true를 반환합니다.
+    - toString() : 열거형 상수의 이름을 반환
+    - hashCode() : 열거형 상수의 해시 코드를 반환합니다.
 
 
 ## Enum에 인스턴스 변수를 추가해서 유용하게 사용하는법
@@ -253,48 +247,73 @@ for (Gogi d : darr) {
 ### 인스턴스 변수를 추가하기
 - Enum으로 인프런 백기선님의 강의Enum, 가격, 한글설명을 포함한다면 아래와 같은 코드 작성이 가능
 ```java
-public enum WhiteshipLectureList {
-  THE_JAVA_JAVA_8 (55000 , "더 자바, Java8"),
-  THE_JAVA_CODE_MANIPULATION (49500 , "더 자바, 코드를 조작하는 다양한 방법"),
-  THE_JAVA_APPLICATION_TEST (66000 , "더 자바, 애플리케이션을 테스트하는 다양한 방법"),
-  SPRING_FRAMEWORK_INTRODUCTION (0 , "스프링 프레임워크 입문"),
-  SPRING_FRAMEWORK_INTRODUCTION_REVISED_EDITION (0 , "예제로 배우는 스프링 입문(개정판)"),
-  SPRING_FRAMEWORK_CORE (55000 , "스프링 프레임워크 핵심 기술"),
-  SPRING_FRAMEWORK_WEB_MVC (110000, "스프링 웹 MVC"),
-  SPRING_BOOT (110000, "스프링 부트 개념과 활용"),
-  SPRING_BOOT_UPDATED (66000 , "스프링 부트 업데이트"),
-  SPRING_AND_JPA_BASED_WEB_APPLICATION_DEVELOPMENT (330000, "스프링과 JPA 기반 웹 애플리케이션 개발"),
-  SPRING_SECURITY (88000 , "스프링 시큐리티"),
-  REST_API (99000 , "스프링 기반 REST API 개발"),
-  SPRING_DATA_JPA (88000 , "스프링 데이터 JPA"),
-  INTERVIEW_GUIDE_SOFTWARE_DEVELOPMENT_ENGINEER (220000, "더 개발자, 인터뷰 가이드");
 
-  private int price;
-  //private final int price; //final 키워드로 수정을 막을 수 있다.
-  private String koreanDescription;
-  
-  // 파라미터 두개짜리 생성자로 Enum 생성
-  WhiteshipLectureList(int price, String koreanDescription) {
-    //System.out.printf("enum constructor > price: %d , desc:%s",price,koreanDescription);
-    // 생성자가 언제 호출되는지 알아보기 위해서
-    this.price = price;
-    this.koreanDescription = koreanDescription;
+public class Launcher113 {
+
+  public static void main(String[] args) {
+
+    // 간단한 이넘 필드변수의 사용 예시
+    WhiteshipLectureList myWish = WhiteshipLectureList.REST_API;
+    System.out.printf("제가 원하는 강의 코드는 %s이고 가격은 %d 입니다 \n(설명 : %s)\n\n", myWish.name(), myWish.getPrice(), myWish.getKoreanDescription());
+    WhiteshipLectureList seven = WhiteshipLectureList.SPRING_SECURITY;
+
+    //Enum의 생성자가 호출되는 시점을 알아내기 위해, 강의 가격별 조회
+    int maxi = 120000; //12만원
+    int mini = 70000; //7만원
+    
+    WhiteshipLectureList[] lectureArray = WhiteshipLectureList.values();
+    for (WhiteshipLectureList lec : lectureArray) {
+        int curPrice = lec.getPrice();
+        System.out.printf("가격 %d 짜리인 강의의의 주제는 %s 입니다\n\n", lec.getPrice(), lec.getKoreanDescription());
+    }
   }
+}
 
-  // 하나짜리 생성자도 가능
-  WhiteshipLectureList(int price) {
-    this.price = price;
-  }
+enum WhiteshipLectureList {
+    THE_JAVA_JAVA_8(55000, "더 자바, Java8"),
+    THE_JAVA_CODE_MANIPULATION(49500, "더 자바, 코드를 조작하는 다양한 방법"),
+    THE_JAVA_APPLICATION_TEST(66000, "더 자바, 애플리케이션을 테스트하는 다양한 방법"),
+    SPRING_FRAMEWORK_INTRODUCTION(0, "스프링 프레임워크 입문"),
+    SPRING_FRAMEWORK_INTRODUCTION_REVISED_EDITION(0, "예제로 배우는 스프링 입문(개정판)"),
+    SPRING_FRAMEWORK_CORE(55000, "스프링 프레임워크 핵심 기술"),
+    SPRING_FRAMEWORK_WEB_MVC(110000, "스프링 웹 MVC"),
+    SPRING_BOOT(110000, "스프링 부트 개념과 활용"),
+    SPRING_BOOT_UPDATED(66000, "스프링 부트 업데이트"),
+    SPRING_AND_JPA_BASED_WEB_APPLICATION_DEVELOPMENT(330000, "스프링과 JPA 기반 웹 애플리케이션 개발"),
+    SPRING_SECURITY(88000, "스프링 시큐리티"),
+    REST_API(99000, "스프링 기반 REST API 개발"),
+    SPRING_DATA_JPA(88000, "스프링 데이터 JPA"),
+    INTERVIEW_GUIDE_SOFTWARE_DEVELOPMENT_ENGINEER(220000, "더 개발자, 인터뷰 가이드");
 
-  WhiteshipLectureList(String koreanDescription) {
-    this.koreanDescription = koreanDescription;
-  }
 
-  // getter setter
+    private int price;
+    private String koreanDescription;
+    //private final int price;
+    //final 키워드로 수정을 막을 수 있다.
+
+    // 파라미터 두개짜리 생성자로 Enum 생성
+    WhiteshipLectureList(int price, String koreanDescription) {
+        System.out.printf("enum constructor > price: %d , desc:%s\n", price, koreanDescription);  // 생성자가 언제 호출되는지 알아보기 위해서
+        this.price = price;
+        this.koreanDescription = koreanDescription;
+    }
+
+    // 하나짜리 생성자도 가능
+    WhiteshipLectureList(int price) {
+        this.price = price;
+    }
+
+    WhiteshipLectureList(String koreanDescription) {
+        this.koreanDescription = koreanDescription;
+    }
+
+
+    //getter && setter ====================
 }
 //출처: https://xxxelppa.tistory.com/204?category=858435 [한칸짜리책상서랍]
 ```
-
+### 결론
+- enum은 static이라서 프로그램 시작과 동시에 생성자가 호출된다
 - private 생성자를 통해서 new로 인스턴스를 생성하는 것은 불가능하지만 인자가 있는 enum을 위한 생성자를 정의할 수 있다. 
 - enum의 기본 필드 (거론되진 않지만 내부적으로는 name이라는 이름의 필드)와 별개로 다른 필드변수들을 선언
 - enum 생성자의 입력파라미터로 전달함, Enum.name()메소드와의 구분되는 시그니쳐가 필요함
@@ -302,7 +321,8 @@ public enum WhiteshipLectureList {
 - 필드변수들(price, koreanDescription)의 getter와 setter메서드들을 public 으로 만들어 사용
 - enum은 상수로 사용되기 때문에 필드변수들을 final로 선언해 생성 후에 변경되는 것을 방지할수도 있다
 
-### 열거형에 멤버, 인스턴스 변수를 추가해야 하는 이유는 위에서 언급한 ordinal() 메서드가 가지고 있는 치명적인 부작용 때문에!
+### 열거형에 멤버(인스턴스) 변수를 추가하기
+- 추가해야 하는 이유는 위에서 언급한 ```ordinal() 메서드```가 가지고 있는 ***```치명적인 부작용```*** 때문에!
 
 - 위에서 ordinal()은 안티패턴이니 사용하지 않는것을 추천드렸는데 그 이유는 아래 코드로 설명하겠습니다.
 ```java
@@ -323,7 +343,9 @@ public enum City {
   - 의도한 상수 순서가 만약에 유지보수하면서 바뀐다면? ordinal()를 호출했던 로직들은 모두 깨진다
 
 ### 그래서 해결책
-- enum에 인스턴스 변수를 추가하는 방법으로 처리
+
+- enum에 인스턴스 변수를 추가하는 방법으로 처리해야 하고
+- 인스턴스 변수를 연속적이지 않은 중간에 하나씩 띄엄띄엄 배치해야 한다
 ```java
 public enum City {
   서울(0), 강릉(3), 성남(4), 인천(5), 수원(7), 대전(8), 부산(11), 춘천(19)
@@ -367,11 +389,45 @@ public class Site {
       this.url = url;
   }
 ```
- 
+
+### 마지막으로 ordinal() 메서드의 도움말도 살펴보면
+
+```
+/**
+* Returns the ordinal of this enumeration constant (its position
+* in its enum declaration, where the initial constant is assigned
+* an ordinal of zero).
+*
+* Most programmers will have no use for this method.  It is
+* designed for use by sophisticated enum-based data structures, such
+* as {@link java.util.EnumSet} and {@link java.util.EnumMap}.
+*
+* @return the ordinal of this enumeration constant
+*/
+public final int ordinal() {
+```
+- 후.. 니들은 담배같은거 피지 마라 : ```Most programmers will have no use for this method```
+
+<br><hr><br>
+
+## JPA에서 필드변수(컬럼) 으로 Enum 활용시 주의사항
+- JPA에서 필드변수(컬럼)으로 Enum을 사용하면 기본으로 Ordinal로 저장한다
+- 실서버로 Enum에 Ordinal로 저장하다 나중에 데이터가 쌓인 상태에서 enum에 값을 추가하면.. 큰일난다
+  - 데이터가 하나씩 밀려서 다 엉켜버림..
+- 그래서 JPA에서 필드변수(컬럼) 으로 Enum 을 사용할때는 꼭 아래 어노테이션을 사용해야한다
+```java
+@Enumerated(EnumType.STRING)
+private EnumType typeData
+```
+  - 이렇게 안해주면 EnumType.ORDINAL이 기본값 
+    - JPA가 공부 안하고 하이버네이트를 쓰는 사람들을 위해 만들어놓은 지뢰, 그것도 데이터가 쌓여야 발생하는
+
+<br><hr><br>
 
 
 
----
+<br><hr><br>
+
 
 ## EnumSet
 
@@ -535,7 +591,7 @@ public enum Element {
   - https://hilucky.tistory.com/304
   - https://effortguy.tistory.com/24
 
----
+<br><hr><br>
 
 
 ### TMI : 자바의 열거형이 C/C++열거형보다 우월한 이유
