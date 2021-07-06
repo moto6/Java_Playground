@@ -3,7 +3,7 @@ package chp11_enum.ex3;
 public class Launcher113 {
 
     public static void main(String[] args) {
-
+//
         // 간단한 이넘 필드변수의 사용 예시
         WhiteshipLectureList myWish = WhiteshipLectureList.REST_API;
         System.out.printf("제가 원하는 강의 코드는 %s이고 가격은 %d 입니다 \n(설명 : %s)\n\n", myWish.name(), myWish.getPrice(), myWish.getKoreanDescription());

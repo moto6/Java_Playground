@@ -13,13 +13,26 @@
 - 블로킹을 빠져나오려면 스트림을 닫는 방법 밖에 없다.
 
 
-### 스트림
+### InputStream, OutputStream
 
 - FIFO(First In First Out) : 
 - ???(단방향) : 입력 스트림과 출력 스트림을 별도로 사용해야 양방향 통신이 가능
 - Blocking(블록킹) : 연속된 데이터의 흐름으로 입출력 진행시 다른 작업을 할 수 없는 블로킹(Blocking) 상태가 된다.
 - @@Todo : 이게 왜 블록킹이지 모름 : 입출력 대상을 변경하기 편하며 동일한 프로그램 구조를 유지할 수 있다.
 - 스트림은 IO 기반
+
+> 참고 java.util.stream와는 다르다
+  - java.util.stream
+    - Interface Stream<T>
+  - 자바 입출력스트림
+    - java.io.OutputStream class
+      - 구현 된 인터페이스 : Closeable, Flushable,AutoCloseable
+      - 하위 클래스 : ByteArrayOutputStream, FileOutputStream, FilterOutputStream, ObjectOutputStream,PipedOutputStream
+
+    - java.io.InputStream class
+      - Implemented Interfaces : Closeable, AutoCloseable
+      - Direct Subclasses: AudioInputStream, ByteArrayInputStream, FileInputStream, FilterInputStream, ObjectInputStream, PipedInputStream, SequenceInputStream, StringBufferInputStream
+
 
 ### NIO(New I/O)
 

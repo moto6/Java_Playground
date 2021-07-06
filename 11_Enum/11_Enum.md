@@ -155,7 +155,7 @@ for (Gogi gogi : gogis) {
 ## Enum의 내부 구조
 - Enum상수는 열거 객체를 참조하는데요
   - 열거 객체는 Heap 영역에 생성된다
-  - 열거형 변수(혹은 상수)는 메소드 영역에 포인터로 존재하고
+  -  변수는 메소드 영역에 포인터로 존재하고
   - 메소드 영역에 포인터형식의 열거형 상수(혹은 변수)는 Heap영역의 열거객체를 참조한다 (중요!)
   - ``바이트``코드로 확인
   ```java
@@ -299,7 +299,7 @@ enum WhiteshipLectureList {
     }
 
     // 하나짜리 생성자도 가능
-    WhiteshipLectureList(int price) {
+    privte WhiteshipLectureList(int price) {
         this.price = price;
     }
 
@@ -506,10 +506,10 @@ enum MyEnum {
 ```
 
 - 이 클래스는 모든 메소드가 static 키워드를 사용하여 정의되어 있기 때문에 객체 생성없이 사용할 수 있다.
-객체 생성 없이 사용할 수 있다고 했지만 사실 객체를 생성할 수 없다.
-api 문서를 찾아보면 이 클래스는 abstract 키워드를 사용한 추상 클래스이기 때문이다.
-이 클래스에 대해 조사하다보니 비트필드에 대한 얘기가 많았다.
-이해는 했는데 어떻게 표현하고 정리해야할지 조심스러워서 잘 정리된 글을 첨부
+  객체 생성 없이 사용할 수 있다고 했지만 사실 객체를 생성할 수 없다.
+  api 문서를 찾아보면 이 클래스는 abstract 키워드를 사용한 추상 클래스이기 때문이다.
+  이 클래스에 대해 조사하다보니 비트필드에 대한 얘기가 많았다.
+  이해는 했는데 어떻게 표현하고 정리해야할지 조심스러워서 잘 정리된 글을 첨부
   - https://jaehun2841.github.io/2019/02/04/effective-java-item36/#%EC%84%9C%EB%A1%A0
 - 실행결과
 
@@ -608,7 +608,7 @@ public enum Element {
     if(mySeason == WINTER) {
         ...
     }
-
+    
     if(myDir == 0) {// c++ 언어에서는 여기서 에러가 발생하지 않음, Java는 여기서 컴파일 에러 발생
         ...
     }
@@ -620,7 +620,6 @@ public enum Element {
     public static final int SEASON_SUMMER = 2;
     public static final int SEASON_FALL   = 3;
     ```
-    
 
 
 - 프로그래밍 언어차원에서 항상 모든 타입오류를 발견해 낼 수 있는 경우를, "엄격한 타입 정의 언어(strogly typed Lang)" 이라고 부릅니다(by 프로그래밍 언어론)
