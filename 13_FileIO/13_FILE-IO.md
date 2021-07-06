@@ -13,25 +13,6 @@
 - 블로킹을 빠져나오려면 스트림을 닫는 방법 밖에 없다.
 
 
-### InputStream, OutputStream
-
-- FIFO(First In First Out) : 
-- ???(단방향) : 입력 스트림과 출력 스트림을 별도로 사용해야 양방향 통신이 가능
-- Blocking(블록킹) : 연속된 데이터의 흐름으로 입출력 진행시 다른 작업을 할 수 없는 블로킹(Blocking) 상태가 된다.
-- @@Todo : 이게 왜 블록킹이지 모름 : 입출력 대상을 변경하기 편하며 동일한 프로그램 구조를 유지할 수 있다.
-- 스트림은 IO 기반
-
-> 참고 java.util.stream와는 다르다
-  - java.util.stream
-    - Interface Stream<T>
-  - 자바 입출력스트림
-    - java.io.OutputStream class
-      - 구현 된 인터페이스 : Closeable, Flushable,AutoCloseable
-      - 하위 클래스 : ByteArrayOutputStream, FileOutputStream, FilterOutputStream, ObjectOutputStream,PipedOutputStream
-
-    - java.io.InputStream class
-      - Implemented Interfaces : Closeable, AutoCloseable
-      - Direct Subclasses: AudioInputStream, ByteArrayInputStream, FileInputStream, FilterInputStream, ObjectInputStream, PipedInputStream, SequenceInputStream, StringBufferInputStream
 
 
 ### NIO(New I/O)
@@ -73,33 +54,37 @@
 
 
 
-## 스트림
+## I/O Stream
 
-### 스트림 : 연속적인 데이터의 흐름
+### (In/Out)Stream 공통
 
-- 유래 : 데이터를 전달하는 통로이며 물의 흐름(stream)에 비유
-- FIFO(First In First Out) 에 단방향특성을 가짐
-  - 입력과 출력(send, recv)구현시 두개를 묶음으로 사용해야한다
-- 연속된 데이터의 흐름으로 입출력 진행시 다른 작업을 할 수 없는 블로킹(Blocking) 상태가 된다.
-- 입출력 대상을 변경하기 편하며 동일한 프로그램 구조를 유지
-  - 입출력 대상 변경 : 파일 / 소켓 / 하드웨어 <←- 스트림으로 읽
-- Stream의 두가지 종류  
+- 데이터를 전달하는 통로이며 물의흐름(stream) 처럼 데이터가 문자열로 계속 나오는 형태
+- FIFO(First In First Out) : 먼저 들어가면 먼저 나옴
+- One-Way(단방향) : 스트림은 입력(send), 출력(recv)가 정해지며 반대뱡향으로는 통신이 불가능
+  - 입력 스트림과 출력 스트림을 별도(2개) 사용해야 양방향 통신이 가능
+  - 입력과 출력(send, recv)모두 구현시 두개를 묶음으로 사용해야한다
+- Blocking(블록킹) : 연속된 데이터의 흐름으로 입출력 진행시 다른 작업을 할 수 없는 Blocking 상태가 된다.
+- 입출력 대상 변경이 가능하다
+  - 입출력 대상 변경 : 파일 / 소켓 / 하드웨어 : 모두 스트림으로 읽기 가능
+  - 리눅스에서 하드웨어, 소켓 모두 파일로 추상화되어서 제공된다!(다들 기억나시죠??)
+  - 결론은  동일한 프로그램 구조를 유지할 수 있다.
+- Stream은 IO 기반 : IO는 정확하게 java.io 패키지를 의미하며 하위 클래스로 Stream의 두가지 종류가 존재
   - InputStream : 읽어들이기 자바속으로
   - OutputStream : 자바에서 밖으로 내보내는 출력
 
-### InputStream
 
-- 바이트 기반 입력 스트림의 최상위 추상 클래스
-- 모든 바이트 기반 입력 스트림은 이 클래스를 상속 받아서 만들어 진다.
-- 버퍼, 파일, 네트워크 단에서 입력되는 데이터를 읽어오는 기능을 수행한다.
+### java.util.stream 은 전혀 다르다
 
-### OutputStream
+- java.util.stream : 반복문을 돌리기 위한것
+  - Interface Stream<T>
 
-- 바이트 기반 출력 스트림의 최상위 추상 클래스
-- 모든 바이트 기반 출력 스트림은 이 클래스를 상속 받아서 만들어 진다.
-- 버퍼, 파일, 네트워크 단으로 데이터를 내보내는 기능을 수행한다.
-
-
+- java.io.(Out/In)putStream : 파일이나 통신 등 입출력 처리하는 클래스가 정의된 패키지
+  - java.io.OutputStream class
+    - 구현 된 인터페이스 : Closeable, Flushable,AutoCloseable
+    - 하위 클래스 : ByteArrayOutputStream, FileOutputStream, FilterOutputStream, ObjectOutputStream,PipedOutputStream
+  - java.io.InputStream class
+    - Implemented Interfaces : Closeable, AutoCloseable
+    - Direct Subclasses: AudioInputStream, ByteArrayInputStream, FileInputStream, FilterInputStream, ObjectInputStream, PipedInputStream, SequenceInputStream, StringBufferInputStream
 
 <br>
 <hr>
@@ -143,6 +128,27 @@ text 데이터를 입출력하는 스트림
 <hr>
 <br>
 
+
+### 
+
+
+### InputStream
+
+- 바이트 기반 입력 스트림의 최상위 추상 클래스
+- 모든 바이트 기반 입력 스트림은 이 클래스를 상속 받아서 만들어 진다.
+- 버퍼, 파일, 네트워크 단에서 입력되는 데이터를 읽어오는 기능을 수행한다.
+
+### OutputStream
+
+- 바이트 기반 출력 스트림의 최상위 추상 클래스
+- 모든 바이트 기반 출력 스트림은 이 클래스를 상속 받아서 만들어 진다.
+- 버퍼, 파일, 네트워크 단으로 데이터를 내보내는 기능을 수행한다.
+
+
+
+<br>
+<hr>
+<br>
 
 ## 표준스트림(표준입출력)
 
