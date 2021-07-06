@@ -4,53 +4,8 @@
 <hr>
 <br>
 
-## 용어정리
-
-### IO (vs NIO)
-
-- 블록킹 : IO 의 방식으로 각각의 스트림에서 read() 와 write() 가 호출이 되면 데이터가 입력 되고, 데이터가 출력되기전까지, 스레드는 블로킹(멈춤) 상태가 된다. 
-- 블로킹 상태에서는 작업이 끝날때까지 기다려야 하며, 그 이전에는 해당 IO 스레드는 사용할 수 없게 되고, 인터럽트도 할 수 없다. 
-- 블로킹을 빠져나오려면 스트림을 닫는 방법 밖에 없다.
 
 
-
-
-### NIO(New I/O)
-
-- 넌블로킹(Non-blocking) : 논블록킹 처리가 가능
-- 체널 기반 : 스트림이 아닌 채널(Channel)을 사용
-- 블로킹 : 블록킹 상태도 지원하며, 블록킹 상태에서는 Interrupt 를 이용하여 빠져나올 수 있다.
-  - 반면에 IO는 블로킹을 빠져나오려면 스트림을 닫는 방법 밖에 없다.
-
-### 채널
-
-- 쌍방향 : 데이터가 통과하는 쌍방향 통로이며
-- 버퍼를 내부적으로 사용 : 채널에서 데이터를 주고 받을 때 사용 되는 것이 버퍼이다.
-- 채널의 종류들
-  - 소켓과 연결된 SocketChannel
-  - 파일과 연결된 FileChannel
-  - 파이프와 연결된 Pipe.SinkChannel 과 Pipe.SourceChannel
-  - 서버소켓과 연결된 ServerSocketChannel 
-
-### 버퍼
-
-- byte, char, int 등 기본(프리미티브) 데이터 타입을 저장할 수 있는 저장소
-- 배열 자료 구조로 제한된 크기(capacity) 에 순서대로 데이터를 저장한다.
-- 실제로는 채널을 통해서 데이터를 주고 받을 때도 쓰임 (원래 버퍼는 데이터를 저장하기 위함이지만)
-- 채널을 통해서 소켓, 파일 등에 데이터를 전송할 때나 읽어올 때 버퍼를 사용하게 됨으로써 가비지량을 최소화 시킬 수 있다
-  - 가바지 콜렉션 회수를 줄임으로써 서버의 전체 처리량을 증가시켜준다.
-
-
-### 스트림과 채널 (Stream vs Channel)
-
-**IO는 스트림(Stream) 기반이다.**
-스트림은 입력 스트림과 출력 스트림으로 구분되어 있기 때문에 데이터를 읽기 위해서는 입력 스트림을 생성해야 하고, 데이터를 출력하기 위해서는 출력 스트림을 생성해야 한다.
-**NIO는 채널(Channel) 기반이다.**
-채널은 스트림과 달리 양방향으로 입력과 출력이 가능하다.
-그렇기 때문에 입력과 출력을 위한 별도의 채널을 만들 필요가 없다.
-<br>
-<hr>
-<br>
 
 
 
@@ -145,6 +100,138 @@ text 데이터를 입출력하는 스트림
 - 버퍼, 파일, 네트워크 단으로 데이터를 내보내는 기능을 수행한다.
 
 
+<br>
+<hr>
+<br>
+
+
+
+
+## IO vs NIO
+
+### IO 와 NIO 비교
+
+- 둘은 전혀 다른 자바 클래스 패키지임
+- jdk11기준 java src 폴더에서 ```tree``` 명령어 사용시 화면
+
+```txt
+└─java
+    ├─io
+    ├─lang
+    │  ├─...
+    │  └─reflect
+    ├─math
+    ├─net
+    ├─nio
+    │  ├─channels
+    │  │  └─spi
+    │  ├─charset
+    │  │  └─spi
+    │  └─file
+    │      ├─attribute
+    │      └─spi
+    ....
+```
+
+- java.io패키지속에 들어있는 클래스들과 java.nio 패키지속 들어있는 클래스가 전혀 다른 자바 클래스들의 패키지입니다!!
+  - 하는일이 워낙 비슷해서(파일/스트림 읽어들이는) 비교를 자주 당하고
+  - 비교는 자주 하는데, 정리가 안되 혼란스러워서 정리해봅니다!
+
+### IO (IO Stream = InputStream + OutputStream)
+
+- java.io 패키지(줄여서 IO)는 자바의 시작과 함께한 ```C언어의 File Discripter 혹은 (FILE *)/(파일포인터)``` 와 1:1 대응되는 자바 클래스가 바로
+  - io.InputStream
+  - io.OutputStream
+- 아래 코드는 InputStream.java파일인데, ```@since   1.0``` 이다 무려..
+
+```java
+ /**
+ * This abstract class is the superclass of all classes representing
+ * an input stream of bytes.
+ *
+ * <p> Applications that need to define a subclass of <code>InputStream</code>
+ * must always provide a method that returns the next byte of input.
+ .... <중략>....
+ * @since   1.0
+ */
+public abstract class InputStream implements Closeable {
+```
+
+- 앞으로 나오게될 이런저런 ```Input``` 혹은 ```Stream``` 키워드들이 들어간 클래스는 모두 InputStream 를 상속받아 특정한 용도로 쓰기 편하게 작성한 클래스니까 필요할때 배워두는걸로 하고 여기서는 전체적인 흐름만 알아가봐요
+- IO Stream의 특징
+  - Blocking : 데이터가 출력되기전까지, 스레드는 멈춰서 컨텍스트가 정지한 상태(=Blocking)
+  - 들어올땐 마음대로였겠지만 나갈때는 아니란다 : 블로킹을 빠져나오려면 스트림을 닫는 방법뿐
+    - Blocking 상태에서는 작업이 끝날때까지 기다려야 하며, 그 이전에는 해당 IO 스레드는 사용할 수 없게 되고, 인터럽트도 불가능하다
+  - IO Stream 사용시 발생하는 일
+    - read() 호출 : 데이터를 읽기를 시도한다
+    - write() 호출이 : 데이터 쓰기를 시도
+      - 파일 : 디스크에서 정보를 Read하도록 OS 에게 System Call
+      - 소켓(통신) : 소켓통신을 Read할 때까지 대기(원하는 버퍼 크기만큼, 소켓프로그래밍 공부해보셨으면 아시겠지만.. 헬)
+        - 소켓 공부 따로 하실꺼죠? 그래서 맛뵈기로 실습 준비해놨습니다 ^^;
+      - 하드웨어 : 하드웨어가 통신신호를 보내줄때까지 해당쓰레드가 Blocking되서 무한정 대기
+
+### NIO(New I/O)
+
+- java.nio 패키지(줄여서 NIO)는 1.4 버전부터 추가된 파일 입출력 클래스인데
+- interoperation method(인터럽트 가능한 메서드) 지원을 위해서 만들어짐
+- 이 NIO 패키지는 channel클래스, Buffer클래스를 사용해서 만들어졌고
+- 내부적으로는 ```java.io.InputStream```, ```java.io.OutputStream``` 을 사용해서 NIO를 만든다
+
+```java
+package java.nio.channels;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+...중략...
+
+/**
+ * Utility methods for channels and streams.
+ *
+ * <p> This class defines static methods that support the interoperation of the
+ * stream classes of the {@link java.io} package with the channel classes
+ * of this package.  </p>
+...중략...
+ * @since 1.4
+ */
+
+public final class Channels {
+```
+
+- NIO의 특징은
+  - 넌블로킹(Non-blocking) : 논블록킹 처리가 가능
+  - 체널 기반 : 스트림이 아닌 채널(Channel)을 사용
+  - 블로킹 : 블록킹 상태도 지원하며, 블록킹 상태에서는 Interrupt 를 이용하여 빠져나올 수 있다.
+    - 반면에 IO는 블로킹을 빠져나오려면 스트림을 닫는 방법 밖에 없다.
+
+### 채널이란?
+
+- 쌍방향 : 데이터가 통과하는 쌍방향 통로이며
+- 버퍼를 내부적으로 사용 : 채널에서 데이터를 주고 받을 때 사용 되는 것이 버퍼이다.
+- 채널의 종류들
+  - 소켓과 연결된 SocketChannel
+  - 파일과 연결된 FileChannel
+  - 파이프와 연결된 Pipe.SinkChannel 과 Pipe.SourceChannel
+  - 서버소켓과 연결된 ServerSocketChannel
+- 참고로 버퍼는 기본(프리미티브) 데이터 타입(byte, char, int 등..)의 배열인데, 자세한건 뒤에서 다룰께요
+
+### 스트림과 채널 (IO-Stream vs NIO-Channel) 비교
+
+- **IO는 스트림(Stream) 기반**
+  - 스트림은 단방향이고, 입력용과 출력용이 구분되어 있다
+    - 데이터를 읽기 위해서는 입력 스트림을 생성해야 하고
+    - 데이터를 출력하기 위해서는 출력 스트림을 따로 또 생성해야 함
+  - 
+- **NIO는 채널(Channel) 기반**
+  - 채널은 스트림과 달리 양방향으로 입력과 출력이 가능하다.
+  - 입력과 출력을 위한 별도의 채널을 만들 필요가 없다.
+  - 사실 NIO 도 내부는 Stream으로 만들었지만, 귀찮고 복잡한 일들을 처리해주기 때문에 쓰기 편하다
 
 <br>
 <hr>
@@ -155,44 +242,48 @@ text 데이터를 입출력하는 스트림
 ### **표준 스트림 = (System.in  +  System.out  +  System.err)**
 
 - System 클래스는 실행시간 환경과 관련된 속성과 메소드를 가지고 있다.
-
 - System 클래스에서 제공되는 out과 in을 이용한 표준 입력, 출력, 에러 출력에 관한 클래스 변수, 외부적으로 정의된 프로퍼티 및 환경 변수의 접근, 파일 및 라이브러리의 로딩 방법, 객체를 복사해주는 메소드와 프로그램을 작성할 때 사용할 수 있는 유용한 메소드
 
-### **System.in**
+### java **System.in**
 
-- System.in 의 변수 타입이 InputStream 형태로 지정이 되어있다.
-- 위에서 언급했지만 InputStream은 최상위 클래스이면서 추상 클래스이기 때문에 InputStream은 객체를 생성할 수 없는 클래스다
-- System.in 을 통해서 접근하는 객체는 JVM이 메모리로 올라오면서 미리 객체를 생성해 두는 대표적인 객체이다. 자료형이 InputStream이기 떄문에 바이트 단위로만 입출력된다.
-- 키보드에서 입력하는 자료는 때에 따라서 두 바이트가 합쳐져야 의미를 가지는 경우가 있다. 그래서 System.in을 통해서 읽을 때는 영문과 한글의 처리를 분리해서 구성해야 잘 인식된다.
+- System.in : 표준입력으로 키보드에서 데이터 읽어들일 때 사용, 변수 in의 데이터형은 InputStream(변수 타입이 InputStream 형태로 지정됨)
+- 위에서 언급했지만 InputStream은 최상위 클래스이면서 추상 클래스이기 때문에 InputStream은 객체를 생성할 수 없는 클래스
+- System.in 을 통해서 접근하는 객체는 JVM이 메모리로 올라오면서 미리 인스턴스화(=실체화/객체생성) 하는 대표적인 객체
+ 자료형이 InputStream이기 떄문에 바이트 단위로만 입출력
+- 키보드에서 입력하는 자료는 때에 따라서 두 바이트가 합쳐져야 의미를 가지는 경우가 있는데(한글이 2바이트)
+  - 그래서 System.in을 통해서 읽을 때는 영문과 한글의 처리를 분리해서 구성해야하는데, 어차피 내부적으로 알아서 다 잘해주고
+  - 요즘에는 인코딩을 UTF-8로 하면 짱짱굿이다
 
-### **System.out**
+### java **System.out**
 
-- 가장 흔하게 System.out.println으로 사용하면서 본 함수이다
-- System.out 변수는 표준 출력 장치 객체를 가리키는 대표적인 출력 변수이다.
-- System.out은 PrintStream 타입으로 되어있는데 여기서 PrintStream이란 OutputStream 클래스의 후손 클래스로 Exception을 안전하게 처리할 메소드로만 구성이 되어있다. 그래서 굳이 try-catch 문 같이 따로 처리를 해주지 않아도 괜찮다
+- System.out : 표준출력으로 PrintStream이 out의 데이터형. 이 클래스의 출력메소드로 print와 println 오버로딩 메소드가 제공됨(System.out 변수는 표준 출력 장치 객체)
+- 대표적으로 System.out.printXX() 메서드 호출할때 사용
+- System.out은 PrintStream 타입
+  - PrintStream이란 OutputStream 클래스의 후손 클래스로 Exception을 안전하게 처리할 메소드로만 구성이 된 클래스
+  - 굳이 try-catch 문 같이 따로 처리를 해주지 않아도 사용가능
 
-### **System.err**
+### java **System.err**
 
 - System.err 객체는 표준 에러 출력 장치를 의미한다. 오류가 발생하게 되면 System.err로 알려줘야 하는 내용이 나온다고 생각하면 된다.
 - System.err 는 PrintStream 클래스 타입으로 System.out을 사용하는 방법과 같다.
 
-### 리눅스의 표준입출력
-- 표준입력 : 키보드에서 입력받은 문자 데이터
-- 표준출력 : 터미널로 출력(터미널의 문자를 모니터로 확인)하는 문자 
-  - 자바에서 표준 입출력은 java.lang.System 클래스가 담당한다. 
-- 표준에러 : 에러메시지 출력하는 전용의 
+### 참고 : 유닉스 계열 표준입출력
+
+- 유닉스계열(리눅스,맥 포함) 프로세스가 shell로부터 stdin, stdout, stderr을 상속받는데요(from 운영체제, 시스템프로그래밍 에서 배움)
+  - 여기서 stdin, stdout, stderr은 stream이라고 불립니다
+  - Shell과 3개의 file stream(stdin, stdout, stderr)을 상속받아서 프로세스가 실행을 시작하는데요
+  - 모든 프로세스는 그래서 프로그램 시작과 동시에 3개의 file stream을 가지고 있습니다(from C언어에서 배움)
+- Unix stdin(표준입력) : 키보드에서 입력받은 문자 데이터
+- Unix stdout(표준출력) : 터미널로 출력(터미널의 문자를 모니터로 확인)하는 문자, 표준에러와의 차이는 호눅스가 예전에 쉘에서 설명해주심
+- Unix stderr(표준에러) : 에러메시지 출력하는 전용의 터미널장치(일반적으로 모니터나 콘솔창에 출력됨)
 - 프로그램이 하나 실행되면 파일이 3개가 자동으로 열리는데(From C언어), 그 3개의 파일이 표준입출력에러 3종셋트이다
   - 표준입력/표준출력/표준에러
-- 이게 왜 표준입출력이냐면, 키보드로 입력해서 터미널로 보는게 지금은 당연하지만 과거에는 아니여서 텔레타이프(tty)나 시리얼통신(RS-232)을 입출력 체널로 설정하는 경우도 많고, 지금도 일부 임베디드 장비에서 그러고 있기 때문
-
-### System.in
-
-- 표준입력으로 키보드에서 데이터 읽어들일 때 사용한다. 변수 in의 데이터형은 InputStream이다. 기본적으로 바이트처리된다는 의미이다.
-
-### System.out
-
-- 표준출력으로 PrintStream이 out의 데이터형이다. 이 클래스의 출력메소드로 print와 println 오버로딩 메소드가 제공된다.
-
+- 자바에서 이에 대응하는 표준 입출력은 java.lang.System 클래스가 담당한다
+- 이게 왜 표준입출력이냐면, 키보드로 입력해서 터미널로 보는게 지금은 당연하지만 과거에는 아니여서 
+  - 라떼는 말야 텔레타이프(tty)나 시리얼통신(RS-232)을 입출력 체널로 설정하는 경우도 많고,
+  - 지금도 일부 임베디드 장비에서 여전히 소켓통신(UDP)/시리얼통신(RS-232) 등으로 표준입출력이 연결되어 있다
+    - 왜 이런짓거리를 하냐면, 모니터가 없게 당연한 장비들이라서!
+- 개인적인 생각이지만 약간의 컴퓨터라는 물건을 만든 설계자들이 리스코프 치환원칙을 잘 지켜서 컴퓨터를 설계하셔서 91년생 자바에서조차 stream과 표준입출력이라는 개념을 사용하는거 같다!
 
 
 <br>
@@ -206,29 +297,24 @@ text 데이터를 입출력하는 스트림
 - 보조스트림은 *실제 데이터를 주고받는 스트림이 아니기 때문에 데이터를 입출력할 수 있는 기능은 없지만*, 스트림의 **`기능을 향상`**시키거나 `**새로운 기능을 추가**`할 수 있다.
 - 즉, 스트림을 먼저 생성한 다음에 이를 이용해 보조스트림을 생성해서 활용한다.
 
-- FilterInputStream 과 FilterOutputStream 을 상속받는 클래스들
-  - : 기본 스트림과 결합하여 특정 상황에서 보다 편리하게 사용할 수 있다.
-- BufferedInputStream/BufferedOutputStream
-  - : 버퍼를 사용해 입출력 효율과 편의를 위해 사용
-- BufferedReader/BufferedWriter
-  - : 라인단위의 입출력이 편리함
-- InputStreamReader/OutputStreamReader
-  - : 바이트 스트림을 문자 스트림처럼 쓸 수 있도록하며 문자 인코딩 변환을 지원
-- DataInputStream/DataOutputStream
-  - : 자바 원시자료형 데이터 처리에 적합
-
+- FilterInputStream 과 FilterOutputStream (+ 상속받는 클래스들) : 기본 스트림과 결합하여 특정 상황에서 보다 편리하게 사용할 수 있다.
+- BufferedInputStream/BufferedOutputStream : 버퍼를 사용해 입출력 효율과 편의를 위해 사용
+- BufferedReader/BufferedWriter : 라인단위의 입출력이 편리함
+- InputStreamReader/OutputStreamReader : 바이트 스트림을 문자 스트림처럼 쓸 수 있도록하며 문자 인코딩 변환을 지원
+- DataInputStream/DataOutputStream : 자바 원시자료형 데이터 처리에 적합
 
 <br>
 <hr>
 <br>
 
-
 ## 자바에서 파일읽고쓰기 기본
 
-- 텍스트 파일인 경우 문자 스트림 클래스들을 사용하면 되고, - 바이너리 파일인 경우 바이트 스트림을 기본적으로 사용한다.
-- 입출력 효율을 위해 Buffered 계열의 보조 스트림을 함께 사용하는 것이 좋다.
-- 텍스트 파일인 경우
-```
+- 텍스트 파일인 경우 문자 스트림 클래스들을 사용하면 되고
+- 바이너리 파일인 경우 바이트 스트림을 기본적으로 사용다.
+  - 입출력 효율을 위해 Buffered 계열의 보조 스트림을 함께 사용하는 것이 좋다.
+- 텍스트 파일인 경우(asci문자)
+
+```java
 BufferedReader br = new BufferedReader(new FileReader("a.txt"));
 BufferedWriter bw = new BufferedWriter(new FileWriter("b.txt"));
 String s;
@@ -236,8 +322,10 @@ while ((s = br.readLine()) != null) {
     bw.write(s + "\n");
 }
 ```
-- 이진 파일인 경우
-```
+
+- 바이너리 파일인 경우(텍스트 빼고 다)
+
+```java
 BufferedInputStream is = new BufferedInputStream(new FileInputStream("a.jpg"));
 BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream("b.jpg"));
 byte[] buffer = new byte[16384];
@@ -250,38 +338,26 @@ while (is.read(buffer) != -1) {
 <hr>
 <br>
 
-
-## 체널
-
-- 데이터가 통과하는 쌍방향 통로
-  - 체널 내부에서 데이터를 주고 받을때 사용되는게 버퍼
-- 자바 NIO(New I/O)는 자바 1.4 버전부터 추가된 API
-- 넌블로킹(Non-blocking) / 스트림이 아닌 채널(Channel) 사용
-- 채널에서 데이터를 주고 받을 때 사용 되는 것이 버퍼
-
-
-<br>
-<hr>
-<br>
-
-
 ## 버퍼
 
+- 버퍼는 기본(프리미티브) 데이터 타입(byte, char, int 등..)의 배열자료구조의 저장소
+- byte, char, int 로 대표되는 premitive type (기본 데이터 타입)을 저장할 수 있는 임시 저장소로서
+- 배열 자료 구조로 제한된 크기(capacity) 에 순서대로 데이터를 저장한다.
+- 실제로는 채널을 통해서 데이터를 주고 받을 때도 쓰임 (원래 버퍼는 데이터를 저장하기 위함이지만)
+- 채널을 통해서 소켓, 파일 등에 데이터를 전송할 때나 읽어올 때 버퍼를 사용하게 됨으로써 가비지량을 최소화 시킬 수 있다
+  - 가바지 콜렉션 회수를 줄임으로써 서버의 전체 처리량을 증가시켜준다.
 - 고속의 장치와 저속의 장치 간의 속도 차이로 인해 발생하는 비효율성 제거를 위한 "데이터를 임시 저장공간"
 - 저속의 장치가 작업 진행시간 동안 고속의 장치가 기다려야하는 현상을 줄여주는 기술
-- byte, char, int 로 대표되는 premitive type (기본 데이터 타입)을 저장할 수 있는 임시 저장소로서
 - 배열과 마찬가지로 제한된 크기(capacity) 에 순서대로 데이터를 저장
 - 실제로 버퍼가 사용되는 것는 채널을 통해서 데이터를 주고 받을 때 사용
 - **채널을 통해서 소켓, 파일 등에 데이터를 전송할 때나 읽어올 때 버퍼를 사용하게 됨으로써 가비지량을 최소화 시킬 수 있게 되며, 이는 가바지 콜렉션 회수를 줄임으로써 서버의 전체 처리량을 증가시켜준다.**
 
 ### 추가 - Buffer 를 사용하면 좋은이유에 대한 근본적인 이유를 고민해야 한다.
 
-Buffer 를 사용하면 좋은 이유 
-차이점과 성능상의 장점이 있는지에 대한 이유가 중요
+- 면접질문 : Buffer 를 사용하면 좋은 이유, 없을때의 차이점과 성능상의 장점이 발생하는 원인을 말씀해주세요
+  - 왜 **`속도가 왜 빨라질까?`** 가 가장 중요한 질문임!
 
-**`속도가 왜 빨라질까?`** 
-
-- 모아서 보내면 왜 빨라질까?
+- 왜 모아서 보내면 왜 빨라질까?
 - 한 바이트씩 바로바로 보내는 것이 아니라 버퍼에 담았다가 한번에 모아서 보내는 방법인데 왜 이렇게 하는 것이
 - 입출력 횟수가 포인트 이다.
 - 단순히 모아서 보낸다고 이점이 있는 것이 아니다 → *시스템 콜의 횟수가 줄어들었기 때문에 성능상 이점이 생기는 것이다*
@@ -297,7 +373,7 @@ Buffer 를 사용하면 좋은 이유
 
 *동일한 양의 물을 마신다고 했을 때 한모금 씩 떠와서 마시는 것과 한 컵씩 떠와서 마시는 것의 차이는??? 시간이 줄어들 것이다.*
 
-### 버퍼를 사용해
+### 버퍼를 사용해 얻는 장점
 
 - 운영체제의 API 호출 횟수를 줄여서 입출력 성능을 개선할 수 있다.
 - 자바 문자열 입력시 (알고리즘 문제) 풀때
@@ -351,19 +427,12 @@ public class Main {
 ```
 
 
-### 전체적인 흐름
- 오성우님
- 제이든94
 
+### 다이렉트버퍼, 논다이렉트 버퍼
 
-## 다이렉트버퍼, 논다이렉트 버퍼
-### 넌다이렉트와 다이렉트 버퍼
-
-버퍼가 사용하는 메모리 위치에 따라서 넌다이렉트(non-direct) 버퍼와 다이렉트(direct) 버퍼로 분류된다.
-
-**넌다이렉트 버퍼**는 **`JVM이 관리하는 힙 메모리 공간`**을 이용하는 버퍼이고,
-
-**다이렉트 버퍼는** `**운영체제가 관리하는 메모리 공간**`을 이용하는 버퍼이다.
+- 버퍼가 사용하는 메모리 위치에 따라서 넌다이렉트(non-direct) 버퍼와 다이렉트(direct) 버퍼로 분류된다.
+  - **넌다이렉트 버퍼**는 **`JVM이 관리하는 힙 메모리 공간`**을 이용하는 버퍼이고,
+  - **다이렉트 버퍼는** `**운영체제가 관리하는 메모리 공간**`을 이용하는 버퍼이다.
 
 | 사용하는 메모리 공간 | JVM의 힙 메모리     | 운영체제의 메모리               |
 | -------------------- | ------------------- | ------------------------------- |
@@ -371,20 +440,13 @@ public class Main {
 | 버퍼의 크기          | 작다                | 크다. (큰 데이터 처리에 유리)   |
 | 입출력 성능          | 낮다                | 높다. (입출력이 빈번할 때 유리) |
 
+- **넌다이렉트 버퍼**는 **JVM 힙 메모리**를 사용하므로 **생성 시간이 빠르지만**,
+  - **넌다이렉트 버퍼**는 JVM의 **제한된 힙 메모리**를 사용하므로 **버퍼의 크기를 크게 잡을 수 없다** (하지만 수백메가바이트 단위)
+- **다이렉트 버퍼**는 **운영체제의 메모리**를 할당받기 위해 운영체제의 네이티브(native) C함수를 호출이 필요
+  - 여러가지 잡다한 처리를 해야하므로 **상대적으로 생성이 느림**
+  - 그래서 **다이렉트 버퍼**는 **자주 생성하기보단 한 번 생성해놓고 재사용**하는 것이 유리
+  - **다이렉트 버퍼**는 운영체제가 관리하는 메모리를 사용하므로 **운영체제가 허용하는 범위 내에서 대용량 버퍼를 생성시킬 수 있다.**
 
-**넌다이렉트 버퍼**는 **JVM 힙 메모리**를 사용하므로 **생성 시간이 빠르지만**,
-
-**다이렉트 버퍼**는 **운영체제의 메모리**를 할당받기 위해 운영체제의 네이티브(native) C함수를 호출해야 하고 여러가지 잡다한 처리를 해야하므로 **상대적으로 생성이 느리다.**
-
-그렇기 때문에 **다이렉트 버퍼**는 **자주 생성하기보단 한 번 생성해놓고 재사용**하는 것이 유리하다.
-
-**넌다이렉트 버퍼**는 JVM의 **제한된 힙 메모리**를 사용하므로 **버퍼의 크기를 크게 잡을 수 없고**, 
-
-**다이렉트 버퍼**는 운영체제가 관리하는 메모리를 사용하므로 **운영체제가 허용하는 범위 내에서 대용량 버퍼를 생성시킬 수 있다.**
-
-- 1시간 35분 지점
-- 몽짜님 글
-- 우형블로그
 <br>
 <hr>
 <br>
@@ -401,6 +463,7 @@ https://www.samsungsds.com/kr/insights/In-Memory-Data-Grid.html
 
 
 ## 직렬화
+
 - 출처 : https://techblog.woowahan.com/2550/
 
 ## 자바 직렬화란?
