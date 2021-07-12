@@ -1,6 +1,9 @@
 # 15 함수형 인터페이스
 
-9999999999
+
+- 불변성 (Immutable) 값이나 변수를 적극 활용할 수 있다.
+- 함수가 참조 투명성을 지키고, 부작용을 줄일 수 있도록 구현할 수 있다.
+- 순수함수 (Pure Function) 로 구현할 수 있다.
 
 
 
@@ -21,8 +24,11 @@
  
 
 ### 함수형 프로그래밍
-
-- 함수를 First-class object로 사용할 수 있다.
+- 함수를 이용한 프로그래밍으로, 함수를 인자값으로 사용하거나 리턴값으로 사용할 수 있으며, 순수 함수를 만들어 모듈화 수준을 높이는 프로그래밍
+- 람다식(Lambda Exp) : 메서드(함수)를 하나의 식으로 표현한 것, 메서드(함수)를 간략하면서도 명확한 식으로 표현
+  - 메서드를 람다식으로 표현하면 메서드명(이름)과 반환값(return)이 사라지게 되는데
+  - 이런 람다식으로 표현된 메서드를 익명함수라고 한다.
+- 함수를 First-class object로 사용할 수 있어야 한다
   - 여기서 (First-class) 요소(Object)라는건데 : class가 자바클래스가 아니고 Object가 자바의 객체랑은 다르다 
   - First-class 요소는 몇가지 조건/특징이 있는데
     - 변수에 할당할 수 있는 요소
@@ -38,6 +44,29 @@
 - 고차 함수(High-Order Fucntion)
   - 함수가 함수를 매개변수로 받을 수 있는 경우
   - 함수가 함수를 리턴할 수 있는 경우
+- 함수형 프로그래밍 패러다임을 지키기 위해서는 
+  - input과 output과 동일
+  - 외부환경으로부터 철저히 독립적 : 외부에 어떤데이터를 읽지도 쓰지도  참조하지도 않음
+  - 순수함수 : 같은 input은 무조건 같은 output이 나온다. (사이드 이펙트가 없다)
+  - 외부변수 오류가 생기지 않음., 부작용(부수효과)에 의한 상태가 없어서 주목받음, 
+  - 입력대비 출력이 정해져있으므로, 멀티프로세싱과 궁합이 좋다
+  - 함수를 특별하게
+    - 함수는 1등 시민이 된다
+    - 함수를 타입으로 지정할수 있다
+    - 함수를 입력파라미터로 넣어줄 수 있다
+    - 함수를 리턴으로 받을 수 있다
+- FP 공부법
+  - 선언형 프로그래밍이다 : 이전에는 명령형 사고
+  - 함수도 변수처럼 생각, 값으로 바라보고 생각
+  - 메서드에서 함수로의 사고와 관점의 전환이 필요
+    - 함수는 클래스에 독립적이고 더 제네럴한 표현
+    - 메서드는 클래스에 종속적이고 객체지향에 적합
+
+## FP 쓰면 좋은이유,
+- 테스트하기 용이하다  : 좋은 코드일 수 밖에 없다
+- Side-Effect 가 없거나 적다, Side-Effect 가 일어나게 한다면 FP라고 말하기에는 곤란
+- 멀티쓰레드에 안전하다, 멀티코어에 적합한 프로그래밍 패러다임
+
 
 ## 자바에서의 람다식 표현
 - 기본형
@@ -58,6 +87,19 @@
 
 - 타입이 없고 매개 변수가 하나일 경우 괄호도 생략 가능
   `a -> a * a`
+
+### 변환공식
+- 메서드의 이름과 반환타입을 제거
+- 함수 블록{} 앞에 화살표(→) 를 추가
+- 반환값이 있는경우
+    - return 생락가능
+    - 마지막에 ; 를 붙이지 않음
+- 입력매개변수의 자료형이 생락가능(대부분 가능하며, 추론이 가능해야함)
+- 매개변수가 하나인경우, 괄호는 생략 가능
+- 블록안의 문장이 하나뿐일 때는 괄호 생략가능
+- 하나뿐인 문장이 return문이면 괄호생략불가
+
+
 
 ## 일급요소 가 뭐냐고..
 
@@ -258,6 +300,8 @@ interface Something {
 - 람다식을 익명 함수라고 부르지만 사실 익명 객체라고 볼 수 있다
   - 이름없는(익명)객체인 이유는 메서드 하나만을 갖는 객체
   - 다시말해서 "진짜 함수만을" 1급객체로 다루는게 아니라, 메서드를 "이름없는 객체"로 한번 감싸준것이 자바가 람다식을 다루는 방법이니까!
+  - 사실 근본 람다식은 익명함수 이지만,
+  - 자바에서는 익명함수가 아니라 익명클래스의 익명객체, 객체의 생성과 선언을 동시에해주는 특별한 어떤 문법적 요소
 - 람다와 스트림(Lambda && Stream)
   - Java8의 람다는 기존 컬렉션 프레임워크의 체계를 뒤흔들기보다는, 람다를 도입하면서 콤보로 같이쓰기에 좋은 인터페이스인 Stream을 같이 도입 
   - Stream 이야기는 뭐 다음주에 하던지..?
@@ -358,9 +402,57 @@ BinaryOperator<T>
 // todo 위에꺼 표로 정리
 
 
+## 함수를 객체로 바라보는 연습예제(by 자바정석)
 
 
+```java
+@FunctionalInterface
+interface Myfunc{
+    void mymethod();//public abstract void mymethod()
+}
+```
 
+```java
+Myfunc f = () -> {};
+Object obj = (Myfunc) (() -> {});
+String s = ((Object) (Myfunc) (() -> {}) ).toString();
+
+System.out.println(f);
+System.out.println(obj);
+System.out.println(s);
+//System.out.println(()->());
+System.out.println((Myfunc)(() -> {}));
+//System.out.println((Myfunc)(() -> {}).toString;
+System.out.println(( (Object) (Myfunc)(() -> {})).toString());
+System.out.println(( (Object) (Myfunc)(() -> {})).toString());
+```
+
+### 위 예제의 해석
+
+- 함수형 인터페이스로 람다식을 "참조"할 수만 있다.
+- 람다식의 타입이 함수형 인터페이스 타입과 일치하는것은 아니다
+- 람다식은 익명 객체이고, 타입이 없다(있긴 있는데, 컴파일러가 임의로 이름을 지정해버리그 때문에 사용자코드에서는 이름이 없고, 그래서 익명이다)
+- 대입 연산자는 양변(L-val과 R-val)의 Type이 같야아 한다 그래서 아래 코드와 같은 형변환이 필요한데
+
+```java
+MyFunc f = (MyFunc)(() -> {});
+```
+
+- 람다식은 MyFunc 인터페이스를 구현하지 않았지만, 해당 인터페이스를 구현한 클래스객체와 완전히 동일한 객체이기 때문에 형변환이 허용된다
+- 위 형변환은 생략가능
+- 자바에서의 람다식은 이름이 없을뿐 객체인데, 자바 최상위 Object 타입으로의 형 변환이 불가능하다
+- 람다식은 오직 함수형인터페이스로만 형 변환이 가능하다
+
+```java
+Object obj = (Myfunc) (() -> {});
+```
+
+- 굳이 꼭 Object 타입으로의 형 변환하려면, 먼저 함수형 인터페이스로 변환후 가능하다
+
+```java
+Object obj = (Myfunc) (() -> {});
+String s = ((Object) (Myfunc) (() -> {}) ).toString();
+```
 
 
 ## 쉐도잉
@@ -384,11 +476,6 @@ https://rlawls1991.tistory.com/entry/%EB%9E%8C%EB%8B%A4-%ED%91%9C%ED%98%84%EC%8B
 
 
 개발자의 공부이야기 참고
-
-
-
-
-
 
 
 ### 메소드 레퍼런스
@@ -432,11 +519,7 @@ public Member getMember(Long id) {
 
 
 
-## 참조
-- https://velog.io/@honux/%EB%B0%B1%EA%B8%B0%EC%84%A0-%EC%9E%90%EB%B0%94-%EC%8A%A4%ED%84%B0%EB%94%94-15-%EB%9E%8C%EB%8B%A4
-- https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html
 
- 
 
 
 
@@ -463,12 +546,161 @@ Lambda 등장 배경
 
 
 
+## TMI 키워드 정리
+
+```java
+메서드와 함수의 차이
+1급객체
+순수함수
+Funtion 은 First Class Citizen이다!
+Colosure(**람다 또는 클로저 closure)
+고차함수(고계함수)
+프로그래밍 패러다임(객체지향과 함수형 패러다임의 공통점과 차이점)**
+```
+
+
+### 메서드와 함수의 차이
+
+- 메서드랑 함수랑 같은건데 다르다.
+- 뭔말이냐면 관점과 패러다임은 다르지만, 의미하는 바는 같다.
+    - 메서드 : 객체지향(oop)에서 객체의 행위나 동작을 표현, 반드시 클래스에 소속됨
+    - 함수 : 하나의 특별한 목적의 작업을 수행하기 위해 독립적으로 설계된 코드의 집합, 
+    : oop 패러다임 이전에 C/C++ 같은 절차지향적 언어들에서는 "단위 작업을 캡슐화" 하는데 사용
+- 자바 8버전 이후에 람다식을 통해 매서드 하나로 뭔가를 할수 있게 되서... 아무튼 대부분 비슷한 용어로 쓰는데 문맥이나 맥락상 통하는 단어고, 두 단어를 크게 구분짓는다고 좋을것도 없고 혼동될꺼도 없을듯 하다..
+
+### 1급 객체
+
+- 1급 함수라고도 하며 자바에서는 함수형 인터페이스를 통해 **구현** 이 가능
+- 보통 자바스크립트를 배울때 많이 나오는 내용
+- 변수나 데이터 구조안에 넣을 수 있다.
+- 파라미터로 전달 할 수 있다.
+- 동적으로 프로퍼티 할당이 가능
+- 리턴값으로 사용할 수 있다.
+
+### 순수함수(Pure Function)
+
+- 입력값이 동일하면 결과가 동일하게 리턴되는 함수. (Test 할때 정확도)
+- 부작용 (Side-effect)가 없는 함수
+- 함수의 실행이 외부의 상태를 변경시키지 않는 함수
+- 함수에서 외부 인자를 변경하지 않고, 입력이 같다면 출력은 무조건 같다
+    - 오직 입력에 의해서만 출력이 정해지고, 환경이나 상태에 영향을 받아서는 안된다
+- 순수한 함수는 멀티 쓰레드 환경에서도 안전하고, 병렬처리 및 계산이 가능
+- 객체지향에서는 객체들간의 상호작용이 중요한것에 대비됨
+
+### 함수와 메서드의 차이
+- 자바에서는 함수의 개념이 없다. 오직 클래스 내부의 매서드 뿐
+- 메소드 
+  - 함수 중에서 오브젝트/클래스에 종속적인 함수를 메서드라고 한다
+  - 자바의 메소드는 일급 요소가 아니므로, 다른 메소드로 전달할 수 없다.
+  - 자바에는 모든 것이 객체다. 메소드는 객체의 행위를 정의하고 객체의 상태를 변경한다
+  - 이런 이유로 기존의 자바 언어 체계에서는 함수형 언어를 언어 차원에서 지원하지는 못하였다.
+  - 함수형 프로그래밍의 조건을 만족하도록 구현하지 못했었는데... (8버전 이전에는)
+- 함수
+  - 오브젝트/클래스에 종속적이면 메서드, 독립적이면 함수라고 칭함
+
+### 그래서 Java8에서는 함수형 인터페이스(Funtional interface, 클래스 앞에 @붙여서 표현해주면 됨) 개념을 도입했어요
+
+- 함수형 인터페이스의 경우, 람다식으로 표현이 가능하도록 자바에서 새로 지원하게 됨
+- 그래서 함수형 인터페이스라는 개념과 람다식 표현을 통해 입력에 의해서만 출력이 결정되도록 ‘순수한 함수’를 표현할 수 있게 됨!
+    - 람다식으로 표현함으로써 ‘익명 함수’를 정의할 수 있게 되었고
+    - 함수형 인터페이스의 메소드에서 또다른 함수형 인터페이스를 인자로 받을 수 있도록 하여 ‘고계 함수’를 정의할 수 있게 되었다.
+- 함수형 프로그래밍 패러다임을 언어차원에서 새로 도입! (멀티패러다임이 따로 없군요!)
+
+- 순수함수 예제코드
+
+```java
+public interface Functional1 {
+  boolean accept();
+}
+
+public interface Functional2 {
+  boolean accept();
+  default boolean reject() { return !accept(); }
+}
+
+@FunctionalInterface
+public interface Functional3 {
+  boolean accept();
+}
+
+public interface NotFunctional {
+  boolean accept();
+  boolean reject();
+}
+```
+
+- Functional1, 2, 3는 모두 함수형 인터페이스를 만족
+- Functional3 인터페이스의 경우, @FunctionalInterface 어노테이션이 있는데, 컴파일러에게 명시적으로 Functional Interface 임을 알려주고 규칙 위반(하나의 인터페이스에 오직 하나의 함수만) 시 컴파일 에러를 뿜어준다
+
+### Funtion 은 First Class Citizen이다!
+
+- 함수형 언어에서는 함수도 하나의 값으로 취급하고, 함수의 인자로 함수를 전달할 수 있는 특성이 있다. 이러한 함수를 일급 객체 (a.k.a 일급 함수)라 칭함
+- First Class Citizen이 되기 위한 3가지의 특징
+    - parameter로 함수를 받을수있고
+    - retrurn으로 함수를 돌려줄수 있고
+    - variable / data Structure로도 함수를 사용한다
+- First Class Citizen을 위한 구현방법 : Anonymous Funtion(자바는 Method)
+    - 자바에서는 Lamda Expresstion 이라고 함
+
+### Colosure(**람다 또는 클로저 closure)**
+
+- 클로저 closure는 람다계산식(lamda Calculus) 구현체
+- 이름 없는 함수(anonymous function)로 리터럴하게 작성가능
+- 선언된 범위(scope)에서 접근 가능한 변수를 캡처해서 저장하고 닫힘
+- Java(8이후) 클로저는 캡처한 변수를 참조(reference)한다
+- 자바에서도 람다를 활용할 수 있다.
+    - (JS나 Swift에서는 함수형 프로그래밍 클로저를 쉽게 만들 수 있고)
+
+- 클로져 예제코드
+
+```
+
+```
+
+### **고차함수(고계함수, Higher-order Function)**
+
+- 함수를 더 추상화하면 차원이 높아지는 고차함수로 표현할 수 있다.
+- 함수를 다루는 상위의 함수
+- 
+- 주 사용 용도는
+    - 콜랙션을 탐색하고, 비교하고, 찾아서 정리하는 기능 (여러 값이 들어있는)
+- 고차함수 예제코드
+
+```java
+
+```
+
+### 익명함수(Annonymous Function)
+
+- 이름이 없는 함수(자바의 메서드)를 정의할 수 있어야 한다.
+- 이러한 익명 함수는 대부분의 프로그래밍 언어에서 ‘람다식’으로 표현하고 있다
+- 이론적인 근거는 람다 대수(람다 계산, 람다 계산법)에 있다.
+
+    : 추상화와 함수 적용 등의 논리 연산을 다루는 형식 체계이다
+
+    : [https://ko.wikipedia.org/wiki/람다_대수](https://ko.wikipedia.org/wiki/%EB%9E%8C%EB%8B%A4_%EB%8C%80%EC%88%98)
+
+- 람다식으로 표현된 메서드를 익명함수라고 한다.
+- 메서드를 람다식으로 표현하면 메서드명(이름)과 반환값(return)이 사라지게 되는데
+- 람다식(Lambda Exp) : 메서드(함수)를 하나의 식으로 표현한 것, 메서드(함수)를 간략하면서도 명확한 식으로 표현
+
+### **프로그래밍 패러다임**
+- **객체지향 패러다임 VS 함수형 패러다임 차이가 뭔지**
+- 객체지향 : 객체를 모델링, 상호작용, 흐름제어가 중요해
+- FP는 흐름 하나, 스테이지 하나 입력에 대한 출력만 중요해
+- 실제 객체를 모델링해서 객체들과의 상호작용 같은걸 생각하면 객체지향이 편한데
+어떤 일을 순서대로 처리한다는 느낌으로는 함수형이 좋은거같아요
+- FP 가 처음 접하는 진입점에서는 어색함을 인정하고 그냥 받아들이자
+
+
 ## TMI 인터페이스
 
 - 펑서녈 인터페이스 어노테이션에다가 업스트랙트, 스태틱 매서드 있어도 에러안나는거 하나 보여줘
 
-## TMI와 스트림 무슨사이야?
+## TMI 람다식이랑 스트림 무슨사이야?
 - https://www.notion.so/15-757106032d85452cbc60cf1808d53978
+
+
 
 
 ## TMI 람다 내부 동작 분석 
@@ -483,5 +715,154 @@ Lambda 등장 배경
   - 이사람은 미쳤어.. https://www.notion.so/15-757106032d85452cbc60cf1808d53978
  
  
+
+## FP+Stream 해커랭크 문제에서 입력데이터 가공할때(문자열 -> 배열)
+- 코드보고가라
+
+```java
+String input =
+                "3 3 " +
+                "1 3 4 " +
+                "2 2 3 " +
+                "1 2 4 ";
+
+String[] firstMultipleInput = input.replaceAll("\\s+$", "").split(" ");
+int H = Integer.parseInt(firstMultipleInput[0]);
+int W = Integer.parseInt(firstMultipleInput[1]);
+List<List<Integer>> A = new ArrayList<>();
+
+IntStream.range(0, H).forEach(i -> {
+    A.add(
+            Stream.of(input.replaceAll("\\s+$", "").split(" "))
+                    .map(Integer::parseInt)
+                    .collect(toList()));
+    int result = Result.surfaceArea(A);
+});
+```
+- 문자열을 가공하는 우아한 방법
+
+
 ## 마지막으로..
+### 리뷰가 중요해
 - 기선님 유툽영상 다 보기 힘들다면 야돈님의 피드백이라도 보는거 츄천 : https://yadon079.github.io/2021/java%20study%20halle/week-15
+
+### 더 공부해야할 키워드
+- 자바 리액티브,
+- 스코프,
+- call-by-name,
+- 모나드
+- 커링(Curry, Curring)
+- 함수 역할 나누기 연습 잘하기!!!!!!!!!!!!!!!!!!!!!(개중요)
+    - 레고블럭 하나가 없는데 어떻게
+    - 함수 역할 정의를 잘 하기
+    - 함수를 순수하게 만들기
+
+
+
+## 참조 && 출처
+- https://velog.io/@honux/%EB%B0%B1%EA%B8%B0%EC%84%A0-%EC%9E%90%EB%B0%94-%EC%8A%A4%ED%84%B0%EB%94%94-15-%EB%9E%8C%EB%8B%A4
+- https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html
+- [https://www.oracle.com/technical-resources/articles/java/architect-lambdas-part1.html](https://www.oracle.com/technical-resources/articles/java/architect-lambdas-part1.html) : 오라클 공식 FP 문서
+- [https://dinfree.com/lecture/language/112_java_9.html](https://dinfree.com/lecture/language/112_java_9.html)
+- [https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures)
+- [https://medium.com/@la.place/higher-order-function-이란-무엇인가-1c61e0bea79](https://medium.com/@la.place/higher-order-function-%EC%9D%B4%EB%9E%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80-1c61e0bea79)
+- [https://youtu.be/jVG5jvOzu9Y](https://youtu.be/jVG5jvOzu9Y)  : 코딩사전님 FP를 초보자용으로 쉽게 설명
+- [https://skyoo2003.github.io/post/2016/11/09/java8-lambda-expression](https://skyoo2003.github.io/post/2016/11/09/java8-lambda-expression) : 정리가 잘되어있는데 나는 어렵다.,..
+
+
+## 자바 스트림 예고
+
+
+- stream 에서 reduce?
+
+```java
+return factors.stream().reduce(0,Integer::sum);
+```
+
+- 상속받을때 super 키워드 (리뷰)
+
+      - 부모생성자 호츨해서 초기화
+
+- 함수형의 불변성 : protected final int
+
+- 함수에서 public static final
+
+- 매서드에서 final : 재정의안됨 오버라이딩 X
+
+- Intstream 이란 도대체 뭘까
+
+
+- 포이치, 맵, 필터, 이런거 잘 쓰는게 중요해
+    - 포이치 foreach
+    - 맵map
+    - 썸과 에브리(some & every)
+    - 리듀스
+    - 필터 : filter
+
+### **자바 Java Stream 인터페이스**
+
+`스트림stream`은 자바 8 API에 새로 추가한 기능이다. 스트림을 이용해서 선언형으로 콜렉션 데이터를 처리하도록 구현할 수 있다.
+
+### **filter**
+
+요구사항은 파일 문자 중 길이가 12보다 큰 문자의 수를 구한다.
+
+```java
+// next.fp.StreamStudy countWords method
+
+String contents = new String(Files.readAllBytes(
+  Paths.get("../ war-and-peace.txt")), StandardCharsets.UTF_8);
+List<String> words = Arrays.asList(contents.split("[\\P{L}]+"));
+
+long count = 0;
+for (String w : words) {
+  if (w.length() > 12) count++;  
+}
+코드복사
+```
+
+---
+
+### **filter 활용해 구현**
+
+```java
+String contents = new String(Files.readAllBytes(
+  Paths.get("../alice.txt")), StandardCharsets.UTF_8);
+List<String> words = Arrays.asList(contents.split("[\\P{L}]+"));
+
+long count = 
+  words.stream().filter(w -> w.length() > 12).count();
+코드복사
+```
+
+---
+
+### **map**
+
+List에 담긴 모든 숫자 값을 2배한 결과 List를 생성한다.
+
+```java
+// next.fp.StreamStudy 클래스의 doubleNumbers method 참고
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
+List<Integer> dobuleNumbers =
+  numbers.stream().map(x -> 2 * x).collect(Collectors.toList());
+코드복사
+```
+
+---
+
+### **reduce**
+
+List에 담긴 모든 숫자의 합을 구한다.
+
+```java
+// next.fp.StreamStudy 클래스의 sumAll method 참고
+
+List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6);
+
+public int sumAll(List<Integer> numbers) {
+    return numbers.stream().reduce(0, (x, y) -> x + y);
+}
+코드복사
+```
+
