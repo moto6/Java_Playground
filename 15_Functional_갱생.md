@@ -20,7 +20,7 @@
 
  
 
-### 자바에서 함수형 프로그래밍
+### 함수형 프로그래밍
 
 - 함수를 First-class object로 사용할 수 있다.
   - 여기서 (First-class) 요소(Object)라는건데 : class가 자바클래스가 아니고 Object가 자바의 객체랑은 다르다 
@@ -39,7 +39,25 @@
   - 함수가 함수를 매개변수로 받을 수 있는 경우
   - 함수가 함수를 리턴할 수 있는 경우
 
- 
+## 자바에서의 람다식 표현
+- 기본형
+ `(int a, int b) -> { return a > b ? a : b; }`
+
+- 블록 생략
+  `(int a, int b) -> a > b ? a : b `
+  - return 생략
+  - 단순식일경우 생략 가능
+  - 한줄(single statement)일때는 ;(세미콜론), 블록({}=브레이스)도 생략가능
+  `- (int i) -> System.out.println(i)`
+
+- return이 포함되어 있으면 중괄호 생략 불가능
+  `(o1, o2) -> return (o1.compareTo(o2));`
+
+- 타입 추론이 가능한 경우 타입 생략도 가능
+  `(a, b) -> a > b ? a : b`
+
+- 타입이 없고 매개 변수가 하나일 경우 괄호도 생략 가능
+  `a -> a * a`
 
 ## 일급요소 가 뭐냐고..
 
@@ -155,38 +173,35 @@ Arrays.sort(names,(s1, s2) -> s1.length()+s2.length());
 System.out.println(Arrays.toString(names));
 ```
 
-
-
+- 이 한줄에서 reverseOrder메서드를 따라가보면
 ```java
 Arrays.sort(names,Comparator.reverseOrder());
 ```
 
 - 요기부분 따라가보면
-
-  ```
-  public static <T extends Comparable<? super T>> Comparator<T> reverseOrder() {
-          return Collections.reverseOrder();
-      }
-  ```
-
-  ```
-  public static <T> Comparator<T> reverseOrder() {
-          return (Comparator<T>) ReverseComparator.REVERSE_ORDER;
-      }
-  ```
-
-  ```
-  @FunctionalInterface
-  public interface Comparator<T> {
-  ```
-
-- 결국 @FunctionalInterface 로 선언된 어떤거라는걸 알수 있다
+```java
+public static <T extends Comparable<? super T>> Comparator<T> reverseOrder() {
+    return Collections.reverseOrder();
+}
+```
+- 리턴타입이 (Comparator<T>) 함수인, 그런 메서드이고
+```java
+public static <T> Comparator<T> reverseOrder() {
+    return (Comparator<T>) ReverseComparator.REVERSE_ORDER;
+}
+```
+- Comparator<T> 를 따라가보면 결국 
+```java
+@FunctionalInterface
+public interface Comparator<T> {
+```
+- 결국 "@FunctionalInterface 어노테이션이 붙은" 인터페이스의 "메서드 하나"라는걸 알수 있다
 
 
 
 ## 자바에서 제공하는 @FunctionalInterface 어노테이션
 
-## 예제코드
+### 예제코드
 
 ```java
 public class Launcher152 {
@@ -236,11 +251,41 @@ interface Something {
   - 자바 Lambda 도 원리는 동일한데
     - Interface 에 단하나의 유일한 메서드만 만들고 호출해서 사용하는 방식
     - 물론 따로  Interface를 생성하지 않고 코드 in-line에서도 사용 가능
+- 람다 도입의 효과 in after Java8
+  - 과거에 사용하던 "익명 클래스"로 만들어 쓰는 대신 대신 "람다식"을 사용할 수 있게 됨
+  - 덕분에 고차함수를 간결하게 작성하고 가독성도 좋아짐
+  - 함수형 프로그래밍 패러다임을 객체지향 언어 자바에 잘 녹여낼수 있었다
+- 람다식을 익명 함수라고 부르지만 사실 익명 객체라고 볼 수 있다
+  - 이름없는(익명)객체인 이유는 메서드 하나만을 갖는 객체
+  - 다시말해서 "진짜 함수만을" 1급객체로 다루는게 아니라, 메서드를 "이름없는 객체"로 한번 감싸준것이 자바가 람다식을 다루는 방법이니까!
+- 람다와 스트림(Lambda && Stream)
+  - Java8의 람다는 기존 컬렉션 프레임워크의 체계를 뒤흔들기보다는, 람다를 도입하면서 콤보로 같이쓰기에 좋은 인터페이스인 Stream을 같이 도입 
+  - Stream 이야기는 뭐 다음주에 하던지..?
 
+## 미리 정의해 놓은 Functional Inteferface
+- Java JDK개발자들이 만들어놓은 함수형 인터페이스가 준비되어 있다
+- 같은 코드를 개발자들이 반복해서 생성하지 않도록 자주 사용하는 함수형 인터페이스를 미리 정의해둔곳이
+  - java.lang.funcation 에 가보면 있다 : 링크 
+  - 뭘 좋아할지 몰라서 다 준비해봤어!
+  - Runnable을 제외하고 java.util.function 패키지 안에 있음
+  - DRY규칙 (Don't repeat yourself) 기억하십시오 휴먼
 
+### 사용법1 인터페이스로 선언해놓고 사용하는경우
+  - 결국 자바 람다식의 본질은 인터페이스에 메서드 하나
+  - 과거에 익명내부클래스 쓰던거랑 바이트코드상 100% 일치하지는 않음
+  - 자바에서 람다식을 특수한 오브젝트의 하나로 취급함!!!!!
+
+### 사용법2 코드 인라인 방식으로 사용하는 경우
+  - 동작코드가 한줄만 있으면 브레이스{} 생략가능
+  - 두줄이상이면 브레이스{} 해줘야함 (if문의 그것과 유사)
+  - 메서드에 객체를 한번 덧씌워주는데
+    - 과거에는 익명내부클래스라는 문법요소로 메서드를 덧씌워줬다면
+    - 람다 공식지원버전(Java8) 이후로는 람다 전용의 객체로 덧씌워주는 방식임
+  - 예시는 기억안나면 위로가서 보고오세요.....
 
 ## Java가 기본으로 제공하는 함수형 인터페이스
 
+- 자바 람다식의 표준 레퍼런스 구현체
 - [java.lang.funcation 패키지](https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html) 참고하면 훨씬~ 더 많은 함수형 인터페이스들이 있다
   - 코드 링크  : 준비해둠
 - 자바에서 미리 정의해둔 자주 사용할만한 함수 인터페이스
@@ -316,21 +361,6 @@ BinaryOperator<T>
 
 
 
-## ㄴ
-
-- 인터페이스로 선언해놓고 사용하는경우
-  - 결국 자바 람다식의 본질은 인터페이스에 메서드 하나
-  - 과거에 익명내부클래스 쓰던거랑 바이트코드상 100% 일치하지는 않음
-  - 자바에서 람다식을 특수한 오브젝트의 하나로 취급함!!!!!
-
-- 코드 인라인 방식으로 사용하는 경우
-  - 동작코드가 한줄만 있으면 브레이스{} 생략가능
-  - 두줄이상이면 브레이스{} 해줘야함 (if문의 그것과 유사)
-  - 메서드에 객체를 한번 덧씌워주는데
-    - 과거에는 익명내부클래스라는 문법요소로 메서드를 덧씌워줬다면
-    - 람다 공식지원버전(Java8) 이후로는 람다 전용의 객체로 덧씌워주는 방식임
-    - 
-
 
 
 ## 쉐도잉
@@ -365,23 +395,45 @@ https://rlawls1991.tistory.com/entry/%EB%9E%8C%EB%8B%A4-%ED%91%9C%ED%98%84%EC%8B
 
 - 람다가 하는 일이 기존 메소드 또는 생성자를 호출하는 거라면, 메소드 레퍼런스를 사용해서 매우 간결하게 표현할 수 있다.
 
-## 메소드 참조하는 방법
+## 메소드 참조 && 생성자 참조 
+## Todo : 표좀 정리해라
 
 | 스태틱 메소드 참조               | 타입::스태틱 메소드            |
 | -------------------------------- | ------------------------------ |
 | 특정 객체의 인스턴스 메소드 참조 | 객체 레퍼런스::인스턴스 메소드 |
 | 임의 객체의 인스턴스 메소드 참조 | 타입::인스턴스 메소드          |
 | 생성자 참조                      | 타입::new                      |
-
  
-
-- 메소드 또는 생성자의 매개변수로 람다의 입력값을 받는다.
-- 리턴값 또는 생성한 객체는 람다의 리턴값이다.
-
+  - static 메서드 : 매개변수 객체의 인스턴스 메서드(함수형 인터페이스를 구현한 인스턴스)
+ - 인스턴스 메서드 : 지금 만든 그 함수
+  - 생성자 : 
+  
  
+- 람다식의 축약형 표현
+  - 람다 표현식에서 단 하나의 메소드만을 호출하는 경우에만 사용가능
+  - 메소드 또는 생성자의 매개변수로 람다의 입력값을 받고
+  - 리턴값 (또는 생성한 객체는 람다의 리턴값)이 없을때 사용
+  - 메서드 참조는 메서드명 앞에 구분자 "::" 콜론 두개를 붙이는 방식으로 메서드 참조를 활용
+  - 예를들어, 람다가 메서드명을 직접 참조하는 것
+- 생성자도 참조 가능
+  - 생성자는 메서드가 아니지만 특별한 함수비슷한 무언가니까..
 
-## 참고
+```java
+(x) -> System.out.println(x)
+System.out::println
+```
+- 이 왜 인텔리제이에서 노란줄 그어주는거 Optional에서 돌아오는거
+```java
+public Member getMember(Long id) {
+    return memberRepository.findById(id).orElseThrow(NoSuchMemberException::new);
+}
+```
+- 위 코드에서 사실 `NoSuchMemberException::new` 인텔리제이가 노란줄 그어줘서 알았지만 메소드 참조 기능을 우리는 쓰고있었다!
 
+
+
+## 참조
+- https://velog.io/@honux/%EB%B0%B1%EA%B8%B0%EC%84%A0-%EC%9E%90%EB%B0%94-%EC%8A%A4%ED%84%B0%EB%94%94-15-%EB%9E%8C%EB%8B%A4
 - https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html
 
  
@@ -390,10 +442,42 @@ https://rlawls1991.tistory.com/entry/%EB%9E%8C%EB%8B%A4-%ED%91%9C%ED%98%84%EC%8B
 
 
 
+## TMI : Java에서 Lambda를 도입하게 된 스토리와 배경
+- 출처 : https://velog.io/@kwj1270/Lambda
+Lambda 등장 배경
 
+하나의 CPU 안에 다수의 코어를 삽입하는 멀터 코어 프로세서들이 등장하면서      
+일반 프로그래머에게도 병렬화 프로그램이에 대한 필요성이 생기기 시작했다.        
+
+이러한 추세에 대응하기 위해 
+자바8 에서는 병렬화를 위한 컬렉션(배열, List, Set, Map)을 강화했고,    
+이러한 컬렉션을 더 효율적으로 사용하기 위해 스트림이 추가되었고   
+또 스트림을 효율적으로 사용하기 위해 함수형 프로그램이,    
+다시 함수형 프로그래밍을 위해 람다가,   
+또 람다를 위해 인터페이스의 변화가수반되었다.   
+람다를 지원하기 위한 인터페이스를 함수형 인터페이스라고 한다.  
+이를 정리하면 아래와 같다.
+
+빅데이터 지원 -> 병렬화 강화 -> 컬렉션 강화 -> 스트림 강화 -> 
+람다 도입 -> 인터페이스 명세 변경 -> 함수형 인터페이스 도입
 
 
 
 ## TMI 인터페이스
 
 - 펑서녈 인터페이스 어노테이션에다가 업스트랙트, 스태틱 매서드 있어도 에러안나는거 하나 보여줘
+
+## TMI와 스트림 무슨사이야?
+- https://www.notion.so/15-757106032d85452cbc60cf1808d53978
+
+
+## TMI 람다 내부 동작 분석 
+## invokedynamic
+- Java SE7 부터 등장한 새로운 바이트 코드 셋이 invokedynamic
+
+- 기존에 invoke 시리즈는 4가지만 존재했었습니다.
+  - invokevirtual - instance 메소드를 디스패치 하기 위한 명령어.
+  - invokestatic - static 메소드를 디스패치 하기 위한 명령어.
+  - invokeinterface - 인터페이스를 통해서 method를 디스패치 하기 위한 명령어.
+  - invokespecial - 생성자, 수퍼클래스, private method 등 invoke-virtual이 아닌 메소드들을 디스패치하기 위한 명령어.
+  - 이사람은 미쳤어.. https://www.notion.so/15-757106032d85452cbc60cf1808d53978
