@@ -7,8 +7,8 @@
   - 이런 연산들을 할수있어요 : sequential(순차 연산), parallel(병렬 연산), aggregate(집계 연산) 
   - elements(원소)들을 sequence(순차적)하게 연산해줘요
   - 원문 : A sequence of elements supporting sequential and parallel aggregate operations
-  - 제가 들은 백기선님의 [The Java8 강의]()에서는 스트림을 "컨베이어 벨트" 메타포로 설명해주시는데에 공감했는데요, StreamAPI는 컨베이어벨트처럼 동작합니다 
-  - 컨베이어 벨트를 [눈으로 보시죠](https://youtu.be/5AJzx-6sQ5M?t=76) : 심지어 영상도 EBS Collection에서 제작했는데요, 이 영상은 Java 개발자들에게 Stream이라는 컨베이어 벨트는 Collection에서만 사용 가능하다는걸 알려주고자하는 의지가 아니였...다고 합니다
+  - 제가 들은 백기선님의 [The Java8 강의]()에서는 스트림을 "컨베이어 벨트" 메타포로 설명해주셨습니다. StreamAPI는 컨베이어벨트처럼 동작합니다 
+    - 컨베이어 벨트를 [시각적으로 느껴보고 오기 위한 링크](https://youtu.be/5AJzx-6sQ5M?t=76) : 심지어 영상도 EBS Collection에서 제작했는데요, 이 영상은 Java 개발자들에게 Stream이라는 컨베이어 벨트는 Collection에서만 사용 가능하다는걸 알려주고자하는 의지가 아니였...?..다고 합니다
 - 데이터를 담고 있는 저장소 (List나 Set같은 컬렉션)이 아니고 저장소도 아닙니다!
   - **``Stream은 operations 입니다!!``** (중요해서 한번더 강조)
 - 선언형으로 컬렉션(프레임워크) 데이터를 처리할수 있는 자바가 기본 지원하는 API(Java 8 이후 사용)
