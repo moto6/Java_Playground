@@ -1,4 +1,4 @@
-# **``Java Stream 인터페이스``** 학습내용 정리
+# **``Java Stream API``** 학습내용 정리
 
 <br><hr><br>
 
