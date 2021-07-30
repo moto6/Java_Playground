@@ -26,12 +26,16 @@ public class Launcher171 {
 
     //여기에 코드를 작성하기
     private static String solution1(List<Subject> subjectList) {
+        return "";
     }
     private static String solution2(List<Subject> subjectList) {
+        return "";
     }
     private static String solution3(List<Subject> subjectList) {
+        return "";
     }
     private static String solution4(List<Subject> subjectList) {
+        return "";
     }
 
 
