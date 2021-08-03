@@ -11,13 +11,19 @@ import java.util.ArrayList;
 
 public class Varex {
     public static void main(String[] args) {
+
         var myIny = 1; // int로 추론
+
+
         var myStr = "Java"; // String으로 추론
         System.out.println(myIny);
+
+
         var stringList = new ArrayList<String>(); // ArrayList<String>으로 추론
         stringList.add("무지개빛");
         stringList.add("총공격이다");
         System.out.println(stringList.toString());
+
 
         int var = 142857; // 식별자로 사용 가능
         System.out.println(var);
