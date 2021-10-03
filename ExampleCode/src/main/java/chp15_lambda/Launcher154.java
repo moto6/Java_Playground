@@ -1,4 +1,4 @@
-package chp15_Lambda;
+package chp15_lambda;
 
 @FunctionalInterface
 interface Myfunc{

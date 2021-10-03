@@ -1,4 +1,4 @@
-package Chp25_Generic.ex2;
+package chp25_generic.ex2;
 
 public class Launcher252 {
     public static void main(String[] args) {

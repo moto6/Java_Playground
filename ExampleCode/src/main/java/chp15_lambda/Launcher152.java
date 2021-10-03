@@ -1,4 +1,4 @@
-package chp15_Lambda;
+package chp15_lambda;
 
 public class Launcher152 {
     public static void main(String[] args) {

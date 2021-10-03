@@ -1,4 +1,4 @@
-package chp15_Lambda;
+package chp15_lambda;
 
 import java.util.Arrays;
 import java.util.Comparator;

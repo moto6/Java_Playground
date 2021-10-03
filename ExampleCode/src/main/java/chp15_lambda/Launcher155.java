@@ -1,4 +1,4 @@
-package chp15_Lambda;
+package chp15_lambda;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package Chp25_Generic.ex1;
+package chp25_generic.ex1;
 
 public class Apple {
     //do nothing
