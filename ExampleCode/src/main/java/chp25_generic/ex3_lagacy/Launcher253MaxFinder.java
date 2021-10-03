@@ -1,6 +1,6 @@
 package chp25_generic.ex3_lagacy;
 
-public class ASN_MaxFinder {
+public class Launcher253MaxFinder {
 
 	public static void main(String[] args) {
 		MaxFinder sample = new MaxFinder();
