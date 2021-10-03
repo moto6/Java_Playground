@@ -1,46 +1,84 @@
-# 자바 14주차
+# 자바 14주차 제네릭 정리
 
-# 목차
+## 목차
 
 - 제네릭 사용법
 - 제네릭 주요 개념 (바운디드 타입, 와일드 카드)
 - 제네릭 메소드 만들기
 - Erasure
 
-# 제네릭이란?
-- 제네릭이란 데이터 타입data type을 일반화generalize하는것
-- Data type 이 변해도 동일한 코드를 재사용 할 수있는 방법
-- 특정 Data type 하나로 정하지 않고 사용할 때마다 바뀔 수 있게 범용적이고 포괄적으로 지정
-- 제네릭은 클래스나 메소드에서 사용할 내부 데이터 타입을 컴파일 시에 미리 지정
-- 제네릭이 컴파일 시 type check를 하는데, 런타임시 타입체크를 하는 방식에 비해 장점이 압도적이다
-  - 클래스나 메소드 내부에서 사용되는 객체의 타입의 안정성을 높일 수 있다.
-  - 반환값에 대한 타입 변환 및 타입 검사에 들어가는 노력을 줄일 수 있다.
-  - Java 5 이전에서는 여러 타입을 사용하는 대부분의 클래스나 메소드에서 인수나 반환값으로 Object타입을 사용했었다. 
-    - 하지만 이 경우에는 반환된 Object 객체를 다시 원하는 타입으로 타입을 변환해야하고  이때 오류가 발생할 가능성도 생긴다. 
-    - 하지만 Java5부터 도입된 제네릭을 사용하면 컴파일 시에 미리 타입이 정해지므로 타입 검사나 타입 변환과 같은 번거로운 작업을 생략할 수 있게 된다
+<br><br>
 
-### 왜 쓰나?
+-------------------
 
-- 타입 안정성 : 제네릭을 사용하면 잘못된 타입이 사용될 수 있는 문제를 컴파일타임에 제거 가능
-    - 런타임에러보다는 무조건 컴파일타임 에러가 좋다!
-- 타입체크/형변환 생략
-    - 프로그램 성능 향상 (타입변환을 할 필요가 없다)
-    - 숏코딩
-- 제네릭을 사용해야하는 이유
-  - 제네릭 타입을 사용함으로써 잘못된 타입이 사용될 수 있는 문제를 컴파일과정에서 제거할 수 있음
-- 자바 컴파일러는 코드에서 잘못 사용된 타입 때문에 발생하는 문제점을 제거하기 위해 제네릭 코드에 대해 강한 타입 체크를 한다.
-- 실행 시 타입 에러가 나는 것보다 컴파일 시에 미리 타입을 강하게 체크해서 에러를 사전에 방지하는 것이 무조건 이득!
-- 제네릭 코드를 사용하면 타입을 국한하기 때문에 요소를 찾아올 때 타입 변환을 할 필요가 없어 프로그램 성능이 향상되는 효과를 얻을 수 있습니다.
+<br><br>
 
-# 제네릭 사용법
+## 제네릭이란?
+- 컴파일타임 타입체크해주는 기능
+- 타입오류를 컴파일타임에 잡아내기 위해서 사용
+
+### 제네릭의 특징
+- 제네릭을 쓰면 data type이 generalize된다(타입을 일반화한 문법)
+- Data type 이 변해도 동일한 코드를 재사용 할수 있게 된다
+- 클래스나 메소드에서 사용할 내부 데이터 타입을 컴파일 시에 미리 지정해둔다
+- 컴파일 시 type check를 하는데, 런타임시 매번 타입체크를 하는 방식에 비해 장점이 많다
+
+### 장점
+
+- 컴파일 타임 에러보다 런타임에러가 압도적으로 디버깅이 편하므로, 제네릭을 사용하면 형변환 에러를 컴파일타임에 찾을수 있어서 런타임에 (객체의 타입의) 안정성이 놓다
+- 타입 변환 && 타입 검사를 덜 신경써도 된다 : 제네릭을 사용하면 잘못된 타입이 사용될 수 있는 문제를 컴파일타임에 제거 가능
+- 런타임의 타입체크/형변환 생략할 수 있어 성능이 좋다 :  프로그램 성능 향상 (타입변환을 할 필요가 없다)
+
+
+### 이 기술을 쓰게 된 배경과 과거이야기 
+- Java 5 이전에서는 여러 타입을 사용하는 대부분의 클래스나 메소드에서 인수나 반환값으로 Object타입을 사용했었는데
+- 이 경우에는 반환된 Object 객체를 다시 원하는 타입으로 타입을 변환해야하고 이때 형변환 실수로 인해 TypeCastException가 발생할 가능성도 있었는데
+- 이 문제를 해결하기 위해 Java5 이후에 도입된 제네릭을 사용해 문제를 해결했는데, 컴파일타임에 컴파일러가 타입을 알고 타입이 정해진다
+- 따라서 과거에 런타임에 코드로 하던 타입 검사나 타입 변환과 같은 번거로운 작업을 생략할 수 있게 되어서 제네릭을 쓴다
+- Java5 이전에 Object형으로 반환하던 코드들과의 호환성을 위해서 **``raw-type-generic``** 이라는걸 만들었는데, 2021년 기준 **``raw-type-generic``** 은 쓸 필요가 없다.
+
+
+<br><br>
+
+-------------------
+
+<br><br>
+
+
+## 제네릭을 선언하고 사용하는 방법
 
 - 타입을 파라미터로 가지는 클래스/인터페이스 가 제네릭이다
 - 클래스/인터페이스 이름 뒤 <> 기호 이후 타입 파라미터
 - 알파벳 대문자 한글자가 디-펙토
 
+### 형식
+
 ```java
 public class 클래스명<T> {...} 
 public interface 인터페이스명<T> {...}
+```
+
+### 예제코드
+
+```java
+interface Tux<T> {
+    public T getData();
+    public void setData(T data);
+}
+
+class Lux<T> implements Tux<T> {
+    T data;
+
+    @Override
+    public T getData() {
+        return data;
+    }
+
+    @Override
+    public void setData(T data) {
+        this.data = data;
+    }
+}
 ```
 
 ```java
@@ -140,7 +178,6 @@ public class GenericTest<A, B, C> {
 } // 결과 A의 타입은 : java.lang.String B의 타입은 : java.lang.Integer C의 타입은 : java.lang.Double Process finished with exit code 0
 ```
 
-# 제네릭 주요 개념 (바운디드 타입, 와일드 카드)
 
 ### 바운디드 타입
 
@@ -149,7 +186,8 @@ public class GenericTest<A, B, C> {
 - 제한된 타입 파라미터( <T extends 최상위타입> )  : 클래스 혹은 인터페이스 타입 파라미터의 상위 타입을 제한
 - 메소드의 중괄호 {} 안에서 타입 파라미터 변수로 사용 가능한 것은 상위 타입의 멤버(필드, 메소드)로 제한. 하위 타입에만 있는 필드, 메소드 사용 불가
 
-### 와일드 카드
+
+## 와일드 카드
 
 - 와일드카드 타입 (<?>, <? extends ...> , <? super ...> )
 
@@ -162,75 +200,6 @@ public class GenericTest<A, B, C> {
 - 제네릭타입 <? super 하위타입> : Lower Bounded Wildcards (하위클래스 제한)
     - 타입 파라미터를 대치하는 구체적인 타입으로 하위 타입이나 상위 타입이 올 수 있다.
 
-# 제네릭 메소드 만들기
-
-- 제네릭 메소드(<T,R> R method(T t)) : 매개 타입과 리턴 타입으로 타입 파라미터를 갖는 메소드
-- 선언 방법 : 리턴 타입 앞에 <> 기호를 추가하고 타입 파라미터를 기술한 다음, 리턴 타입과 매개 타입으로 타입 파라미터를 사용하면 됨.
-
-```java
-public <타입파라미터, ...> 리턴타입 메소드명(매개변수 ,... ) { 
-
-}
-
-// boxing() 제네릭 메소드는 <> 기호 안에 타입 파라미터 T를 기술한 뒤, 매개 변수 타입으로 T를 사용하였고,
-// 리턴 타입으로 제네릭 타입 Box<T>를 사용했다.
-public <T> Box<T> boxing(T t) {
-
-}
-```
-
-- 제네릭 메소드 호출 방법
-
-```java
-리턴타입 변수 = <구체적타입> 메소드명(매개값) ; 	//명시적으로 구체적 타입을 지정
-Box<Integer> box = <Integer>boxing(100);
-
-리턴타입 변수 = 메소드명(매개값); 	// 매개값을 보고 구체적 타입 추정 
-Box<Integer> box = boxing(100);
-```
-
-# Erasure
-
-- 실행 시간에 제네릭은 모두 raw 형태 (제네릭 타입에서 타입이 소거된 타입).
-- 제네릭 타입을 정의하면 해당 타입은 로(raw) 타입으로 컴파일된다.
-
-```java
-public class Product<T, M> {
-	private T kind;
-    private M model;
-    
-    
-    public T getKind() { return this.kind; }
-    public M getModel() { return this.model; }
-    
-    public void setKind(T kind){ this.kind = kind; }
-    public void setModel(M model){ this.model = model;}
-}
-
-컴파일 후
-
-public class Product<Object, Object> {
-	private Object kind;
-    private Object model;
-    
-    
-    public Object getKind() { return this.kind; }
-    public Object getModel() { return this.model; }
-    
-    public void setKind(Object kind){ this.kind = kind; }
-    public void setModel(Object model){ this.model = model;}
-}
-```
-
-
-
-## Type Erasure
-- 컴파일러는 컴파일 타임에 타입 파라미터를 사용하는 대상의 타입을 컴파일러가 정하는 타입으로 대체하는 Type Erasure를 실행하게 된다. 컴파일된 바이트코드에서는 T 대신 특정 타입으로 대체되어 있다.
-- Type Erasure의 규칙
-  - 제네릭 타입의 타입 파라미터가 상하한이 있는 경우에는 타입 파라미터를 한계 타입으로, 없는 경우 모든 타입 파라미터를 Object로 바꾼다 . 따라서 생성 된 바이트 코드에는 보통의 클래스, 인터페이스 및 메서드 만 포함된다.
-type-safety를 유지하기 위해 필요한 경우 타입 캐스팅을 사용할 수 있다.
-제네릭 타입을 상속받은 클래스에서는 다형성을 유지하기 위해 브리지 메서드를 생성한다.
-제네릭 타입 Erasure
 
 
 ## 바운디드 타입과 와일드 카드
@@ -281,6 +250,78 @@ null 을 추가 할 수 있다 .
 clear 를 호출 할 수 있다 .
 iterator를 가져오고 remove를 호출 할 수 있다 .
 와일드 카드를 캡처하고 List에서 읽은 요소를 쓸 수 있다.
+
+
+## 제네릭 메소드 만들기
+
+- 제네릭 메소드(<T,R> R method(T t)) : 매개 타입과 리턴 타입으로 타입 파라미터를 갖는 메소드
+- 선언 방법 : 리턴 타입 앞에 <> 기호를 추가하고 타입 파라미터를 기술한 다음, 리턴 타입과 매개 타입으로 타입 파라미터를 사용하면 됨.
+
+```java
+public <타입파라미터, ...> 리턴타입 메소드명(매개변수 ,... ) { 
+
+}
+
+// boxing() 제네릭 메소드는 <> 기호 안에 타입 파라미터 T를 기술한 뒤, 매개 변수 타입으로 T를 사용하였고,
+// 리턴 타입으로 제네릭 타입 Box<T>를 사용했다.
+public <T> Box<T> boxing(T t) {
+
+}
+```
+
+- 제네릭 메소드 호출 방법
+
+```java
+리턴타입 변수 = <구체적타입> 메소드명(매개값) ; 	//명시적으로 구체적 타입을 지정
+Box<Integer> box = <Integer>boxing(100);
+
+리턴타입 변수 = 메소드명(매개값); 	// 매개값을 보고 구체적 타입 추정 
+Box<Integer> box = boxing(100);
+```
+
+## Erasure
+
+- 실행 시간에 제네릭은 모두 raw 형태 (제네릭 타입에서 타입이 소거된 타입).
+- 제네릭 타입을 정의하면 해당 타입은 로(raw) 타입으로 컴파일된다.
+
+```java
+public class Product<T, M> {
+	private T kind;
+    private M model;
+    
+    
+    public T getKind() { return this.kind; }
+    public M getModel() { return this.model; }
+    
+    public void setKind(T kind){ this.kind = kind; }
+    public void setModel(M model){ this.model = model;}
+}
+
+컴파일 후
+
+public class Product<Object, Object> {
+	private Object kind;
+    private Object model;
+    
+    
+    public Object getKind() { return this.kind; }
+    public Object getModel() { return this.model; }
+    
+    public void setKind(Object kind){ this.kind = kind; }
+    public void setModel(Object model){ this.model = model;}
+}
+```
+
+
+
+## Type Erasure
+- 컴파일러는 컴파일 타임에 타입 파라미터를 사용하는 대상의 타입을 컴파일러가 정하는 타입으로 대체하는 Type Erasure를 실행하게 된다. 컴파일된 바이트코드에서는 T 대신 특정 타입으로 대체되어 있다.
+- Type Erasure의 규칙
+  - 제네릭 타입의 타입 파라미터가 상하한이 있는 경우에는 타입 파라미터를 한계 타입으로, 없는 경우 모든 타입 파라미터를 Object로 바꾼다 . 따라서 생성 된 바이트 코드에는 보통의 클래스, 인터페이스 및 메서드 만 포함된다.
+type-safety를 유지하기 위해 필요한 경우 타입 캐스팅을 사용할 수 있다.
+제네릭 타입을 상속받은 클래스에서는 다형성을 유지하기 위해 브리지 메서드를 생성한다.
+제네릭 타입 Erasure
+
 
 
 ## 제네릭 주의사항 && TMI
@@ -412,6 +453,67 @@ objectList.add("입력~!");
 ![https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9798fbbc-c5bf-4c07-9156-8f7be9579f16/Untitled.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/9798fbbc-c5bf-4c07-9156-8f7be9579f16/Untitled.png)
 
 
-- 참고링크
+
+## 제네릭 원시타입 (raw-type-generic)
+- 이펙티브 자바를 추천
+
+- 제네릭 선언
+```java
+class Box<T> {
+    T data;
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+}
+```
+- rawtype의 사용
+```java
+//public class Launcher255 {
+Box<String> stringBox = new Box<>();
+Box<Integer> integerBox = new Box<>();
+Box rawBox = new Box<>();
+Box rawBox2 = new Box();
+Box rawBox3 = stringBox;
+Box rawBox4 = integerBox;
+```
+
+
+
+## 각 언어별 제네릭
+### CPP의 제네릭
+```c++
+using namespace std;
+//템플릿, 제네릭
+//큰값을 리턴하는 제네릭 함수
+template<class T>
+T bigger(T a, T b) {
+    if (a > b) {
+        return a;
+    }
+    else{
+        return b;
+    }
+        
+}
+
+int main()
+{
+    int a = 10, b = 20;
+    char c = 'a', d = 'z';
+    cout << bigger(a, b) << endl;
+    cout << bigger(c, d) << endl;
+}
+```
+
+
+
+## 참고문헌
+- https://docs.oracle.com/javase/tutorial/java/generics/rawTypes.html
+- https://docs.oracle.com/javase/tutorial/java/generics/why.html
 - https://docs.oracle.com/javase/tutorial/java/generics/restrictions.html
 - https://rockintuna.tistory.com/102
