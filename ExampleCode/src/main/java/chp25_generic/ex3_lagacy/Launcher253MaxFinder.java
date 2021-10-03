@@ -3,8 +3,8 @@ package chp25_generic.ex3_lagacy;
 public class Launcher253MaxFinder {
 
 	public static void main(String[] args) {
-		MaxFinder sample = new MaxFinder();
-		sample.testGetMin();
+		Launcher253MaxFinder finder = new Launcher253MaxFinder();
+		finder.testGetMin();
 	}
 
 	public void testGetMax() {
